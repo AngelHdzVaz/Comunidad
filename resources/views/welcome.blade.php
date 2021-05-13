@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-
      <!-- FEATURE -->
      <section id="home" data-stellar-background-ratio="0.5">
           <div class="overlay"></div>
@@ -18,8 +17,6 @@
                </div>
           </div>
      </section>
-
-
      <!-- FEATURE -->
      <section id="feature" data-stellar-background-ratio="0.5">
           <div class="container">
@@ -79,9 +76,7 @@
                                    </div>
                               </div>
                          </div>
-
                     </div>
-
                     <div class="col-md-6 col-sm-6">
                          <div class="feature-image">
                               <img src="images/feature-mockup.png" class="img-responsive" alt="Thin Laptop">
@@ -91,19 +86,15 @@
                </div>
           </div>
      </section>
-
-
      <!-- ABOUT -->
      <section id="about" data-stellar-background-ratio="0.5">
           <div class="container">
                <div class="row">
-
                     <div class="col-md-offset-3 col-md-6 col-sm-12">
                          <div class="section-title">
                               <h1>Professional Team for you</h1>
                          </div>
                     </div>
-
                     <div class="col-md-4 col-sm-4">
                          <div class="team-thumb">
                               <img src="images/team-image1.jpg" class="img-responsive" alt="Andrew Orange">
@@ -114,7 +105,6 @@
                               </div>
                          </div>
                     </div>
-
                     <div class="col-md-4 col-sm-4">
                          <div class="team-thumb">
                               <div class="team-info team-thumb-down">
@@ -125,7 +115,6 @@
                               <img src="images/team-image2.jpg" class="img-responsive" alt="Catherine Soft">
                          </div>
                     </div>
-
                     <div class="col-md-4 col-sm-4">
                          <div class="team-thumb">
                               <img src="images/team-image3.jpg" class="img-responsive" alt="Jack Wilson">
@@ -140,24 +129,18 @@
                </div>
           </div>
      </section>
-
-
      <!-- TESTIMONIAL -->
      <section id="testimonial" data-stellar-background-ratio="0.5">
           <div class="container">
                <div class="row">
-
                     <div class="col-md-6 col-sm-12">
                          <div class="testimonial-image"></div>
                     </div>
-
                     <div class="col-md-6 col-sm-12">
                          <div class="testimonial-info">
-
                               <div class="section-title">
                                    <h1>What People Say</h1>
                               </div>
-
                               <div class="owl-carousel owl-theme">
                                    <div class="item">
                                         <h3>Vestibulum tempor facilisis efficitur. Sed nec nisi sit amet nibh pellentesque elementum. In viverra ipsum ornare sapien rhoncus ullamcorper.</h3>
@@ -166,7 +149,6 @@
                                              <h4>Michael</h4>
                                         </div>
                                    </div>
-
                                    <div class="item">
                                         <h3>Donec pretium tristique elit eget sodales. Pellentesque posuere, nunc id interdum venenatis, leo odio cursus sapien, ac malesuada nisl libero eget urna.</h3>
                                         <div class="testimonial-item">
@@ -174,7 +156,6 @@
                                              <h4>Sofia</h4>
                                         </div>
                                    </div>
-
                                    <div class="item">
                                         <h3>Lorem ipsum dolor sit amet, consectetur adipisicing eiusmod tempor incididunt ut labore et dolore magna.</h3>
                                         <div class="testimonial-item">
@@ -183,14 +164,12 @@
                                         </div>
                                    </div>
                               </div>
-
                          </div>
                     </div>
 
                </div>
           </div>
      </section>
-
      <!-- PRICING -->
      <section id="pricing" data-stellar-background-ratio="0.5">
           <div class="container">
@@ -216,7 +195,7 @@
                              </div>
                              <div class="pricing-bottom">
                                    <span class="pricing-dollar">$200/mo</span>
-                                   <a href="#" class="section-btn pricing-btn">Register now</a>
+                                   <a href="{{ route('VerPreregistro') }}" class="section-btn pricing-btn">Preregistro</a>
                              </div>
                          </div>
                     </div>
@@ -235,7 +214,7 @@
                              </div>
                              <div class="pricing-bottom">
                                    <span class="pricing-dollar">$350/mo</span>
-                                   <a href="#" class="section-btn pricing-btn">Register now</a>
+                                   <a href="{{ route('VerPreregistro') }}" class="section-btn pricing-btn">Preregistro</a>
                              </div>
                          </div>
                     </div>
@@ -254,7 +233,7 @@
                              </div>
                              <div class="pricing-bottom">
                                    <span class="pricing-dollar">$550/mo</span>
-                                   <a href="#" class="section-btn pricing-btn">Register now</a>
+                                   <a href="{{ route('VerPreregistro') }}" class="section-btn pricing-btn">Preregistro</a>
                              </div>
                          </div>
                     </div>
@@ -308,14 +287,14 @@
 
                     <div class="copyright-text col-md-12 col-sm-12">
                          <div class="col-md-6 col-sm-6">
-                              <p>Copyright &copy; 2018 Company Name - Design: Tooplate</p>
+                              <p>Copyright &copy; 2021 Comunidad</p>
                          </div>
 
                          <div class="col-md-6 col-sm-6">
                               <ul class="social-icon">
-                                   <li><a href="#" class="fa fa-facebook-square" attr="facebook icon"></a></li>
-                                   <li><a href="#" class="fa fa-twitter"></a></li>
-                                   <li><a href="#" class="fa fa-instagram"></a></li>
+                                   <li><a href="#" class="fab fa-facebook-square" attr="facebook icon"></a></li>
+                                   <li><a href="#" class="fab fa-twitter"></a></li>
+                                   <li><a href="#" class="fab fa-instagram"></a></li>
                               </ul>
                          </div>
                     </div>

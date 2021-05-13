@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>Grupo RICSO</title>
+        <title>Comunidad</title>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{ asset('js/sweetalert2.min.js') }}"></script>
@@ -64,16 +64,16 @@
                 <!-- MENU LINKS -->
                 <div class="collapse navbar-collapse">
                           @guest
-                          <a href="location.href='{{ route('welcome') }}'" class="navbar-brand smoothScroll">
+                          <a href="{{ route('welcome') }}" class="navbar-brand smoothScroll">
                             <img src="{{asset('images/comunity.jpg')}}" width="50" height="50" alt="">
                           </a>
                           @else
-                          <a href="location.href='{{ route('home') }}'" class="navbar-brand smoothScroll">Home</a>
-                          @endguest
-                          <a href="#feature" class=" navbar-brand smoothScroll">Features</a>
-                          <a href="#about" class="navbar-brand smoothScroll">About us</a>
-                          <a href="#pricing" class="navbar-brand smoothScroll">Pricing</a>
-                         <a href="#contact" class="navbar-brand smoothScroll">Contact</a>
+                          <a href="{{ route('home') }}" class="navbar-brand smoothScroll">Comunidad</a>
+                          @endauth
+                          <a href="#feature" class=" navbar-brand smoothScroll">Caracteristícas</a>
+                          <a href="#about" class="navbar-brand smoothScroll">Sobre Nosotros</a>
+                          <a href="#pricing" class="navbar-brand smoothScroll">Precios</a>
+                         <a href="#contact" class="navbar-brand smoothScroll">Contacto</a>
                      <ul class="nav navbar-nav navbar-right">
                              <div class="collapse navbar-collapse" id="navbarSupportedContent">
                                      <!-- Authentication Links -->
@@ -91,7 +91,7 @@
                                      @else
                                          <li class="nav-item dropdown">
                                              <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                                 {{ Auth::user()->name }}
+                                                 {{ Auth::user()->email }}
                                              </a>
                                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                                  <a class="dropdown-item" href="{{ route('logout') }}"
@@ -115,12 +115,18 @@
       <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
           <div class="container">
-          <a class="nav-link" href="{{ url('/ ') }}">
-              <img src="{{asset('images/comunity.jpg')}}" width="70" height="70" alt="">
-          </a>
+            @guest
+            <a href="{{ route('welcome') }}" class="navbar-brand smoothScroll">
+              <img src="{{asset('images/comunity.jpg')}}" width="50" height="50" alt="">
               <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
               <span class="navbar-toggler-icon"></span>
           </button>
+            </a>
+            @else
+            <a href="{{ route('home') }}" class="navbar-brand smoothScroll">Home</a>
+            <a href="{{ route('ListarEmpleado') }}" class="navbar-brand smoothScroll">Empleados</a>
+            <a href="{{ route('VerNoticias') }}" class="navbar-brand smoothScroll">Noticias</a>
+            @endauth
 
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <!-- Left Side Of Navbar -->
@@ -140,7 +146,7 @@
                   @else
                       <li class="nav-item dropdown">
                           <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                              {{ Auth::user()->name }}
+                              {{ Auth::user()->email }}
                           </a>
                           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                               <a class="dropdown-item" href="{{ route('logout') }}"

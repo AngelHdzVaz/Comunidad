@@ -36,6 +36,12 @@
             <p><h4>Mensaje Enviado: </h4><br>
                 {{ $visita_mensaje }}
             </p>
+						<br>
+						<p>Datos de contacto:<br>
+							{{ $visita_correo}}<br>
+							{{ $visita_correo}}<br>
+						</p>
+
 					</td>
 				</tr>
 				<tr>

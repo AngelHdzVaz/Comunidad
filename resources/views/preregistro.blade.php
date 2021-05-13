@@ -3,13 +3,13 @@
 
   <section id="contact" data-stellar-background-ratio="0.5">
        <div class="container">
+         <div class="card">
+             <div class="card-header"><h2>{{ __('Preregistro') }}</h2></div>
+             <div class="card-body">
             <div class="p-2 row">
                  <div class="col-md-offset-1 col-md-10 col-sm-12">
                       <form  method="POST" action="{{ route('RealizarPreRegistro') }}" id="contact-form"  >
                           @csrf
-                           <div class="section-title">
-                                <h1> Preregistro </h1>
-                           </div>
                            <div class="p-2 col-md-4 col-sm-4">
                                 <input type="text" class="form-control" placeholder="Nombre Completo" name="nombre" required>
                            </div>
@@ -27,12 +27,14 @@
                                 <textarea class="form-control" rows="8" placeholder="Su mensaje aquí" name="mensaje" required></textarea>
                            </div>
                            <div class="p-2 col-md-4 col-sm-4">
-                                <button type="submit" class="form-control" name="enviar_datos" value="Enviar Mensaje">
-                                    <i class="fas fa-email"></i>Enviar Datos</button>
+                                <button type="submit" class="form-control btn btn-primary" name="enviar_datos" value="Enviar Mensaje">
+                                    <i class="fas fa-envelope"></i>  Enviar Datos</button>
                            </div>
                       </form>
                  </div>
             </div>
-       </div>
+            </div>
+        </div>
+      </div>
   </section>
   @endsection
