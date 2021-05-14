@@ -37,11 +37,15 @@ Route::get('/verPreregistro',[UsuariosController::class, 'verPreregistro'])->nam
 Route::post('/rPreregistro',[UsuariosController::class, 'realizarPreRegistro'])->name('RealizarPreRegistro');
 Auth::routes();
 Route::get('/verRegistroEmpleado',[UsuariosController::class, 'verRegistroEmpleado'])->name('VerRegistroEmpleado');
-Route::post('/verRegistroEmpleado', [UsuariosController::class, 'registrarEmpleado'])->name('RegistrarEmpleado');
+Route::post('/RegistroEmpleado', [UsuariosController::class, 'registrarEmpleado'])->name('RegistrarEmpleado');
 Route::get('/listarEmpleado',[UsuariosController::class, 'listarEmpleado'])->name('ListarEmpleado');
 Route::get('/editarEmpleado',[UsuariosController::class, 'verEditorEmpleado'])->name('VerEditorEmpleado');
 Route::post('/editarEmpleado', [UsuariosController::class, 'editorEmpleado'])->name('EditorEmpleado');
 
 Route::get('/noticias',[NoticiasController::class, 'verNoticias'])->name('VerNoticias');
 Route::get('/verRegistroNoticia',[NoticiasController::class, 'verRegistroNoticia'])->name('VerRegistroNoticia');
-Route::post('/registroNoticia',[NoticiasController::class,'resgistrarNoticia'])->name('RegistrarNoticia');
+Route::post('/registroNoticia',[NoticiasController::class,'registrarNoticia'])->name('RegistrarNoticia');
+
+Route::get('/cumpleanios',[NoticiasController::class,'cumpleanios'])->name('Cumpleanios');
+Route::get('/calendario',[NoticiasController::class,'calendario'])->name('Calendario');
+Route::get('/eventos',[NoticiasController::class,'eventos'])->name('Eventos');

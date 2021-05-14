@@ -41,7 +41,7 @@
       @foreach($lista_noticias as $noticia)
         <article class="blog-post">
           <h2 class="blog-post-title">{{ $noticia->titulo  }}</h2>
-          <p class="blog-post-meta">{{ $noticia->created_at  }} publicado: <a href="#">{{ $noticia->autor_pub->primer_nombre." ".$noticia->autor_pub->apellido_paterno  }}</a></p>
+          <p class="blog-post-meta">{{ $noticia->fecha_publicacion  }} publicado: <a href="#">{{ $noticia->autor_pub->primer_nombre." ".$noticia->autor_pub->apellido_paterno  }}</a></p>
           <p>{{ $noticia->resumen}}</p>
           <hr>
           <p>{{ $noticia->cuerpo}}</p>
@@ -79,9 +79,9 @@
         <div class="p-4">
           <h4 class="fst-italic">Otras Secciones</h4>
           <ol class="list-unstyled">
-            <li><a href="#">Cumpleaños</a></li>
-            <li><a href="#">Calendario</a></li>
-            <li><a href="#">Eventos</a></li>
+            <li><button class="btn" type="button" onclick= "location.href='{{ route('Cumpleanios')}}'"><i class="fas fa-birthday-cake"></i> Cumpleaños</button></li>
+            <li><button class="btn" type="button" onclick= "location.href='{{ route('Calendario')}}'"><i class="far fa-calendar-alt"></i> Calendario</button></li>
+            <li><button class="btn" type="button" onclick= "location.href='{{ route('Eventos')}}'"><i class="far fa-star"></i> Eventos</button></li>
           </ol>
         </div>
       </div>

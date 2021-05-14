@@ -10,22 +10,25 @@ use Auth; //autentificacion
 use Log; //archivo log
 use Mail; //servicios de correo
 use Ctt;
-use App\Mail\PreregistroContactanos;
-use App\Models\Preregistro as PreR ;
 use App\Models\Empresas_empleado as EEmp;
 use App\Models\Persona as Per ;
 use App\Models\Usuario as Usua ;
 use App\Models\Personas_correo as PCor ;
 use App\Models\Publicacione as Pub;
+use Carbon\Carbon;
 
 class NoticiasController extends Controller
 {
   public function verNoticias(Request $request){
-    $lista_noticias = Pub::with('autor_pub:uuid,primer_nombre,apellido_paterno')
+    $hoy = Carbon::today()->toDateString();
+    $month = Carbon::today()->format('M');
+
+    $lista_noticias = Pub::orderBy('fecha_publicacion','desc')
+      ->with('autor_pub:uuid,primer_nombre,apellido_paterno')
       ->where('activa',true)
+      ->where('fecha_publicacion','<=',$hoy)
       ->get();
-    //dd($autor);
-  return view('noticias',compact('lista_noticias'));
+    return view('noticias',compact('lista_noticias'));
   }
 
   public function verRegistroNoticia(Request $request){
@@ -39,34 +42,54 @@ class NoticiasController extends Controller
       $resumen = $request->resumen;
       $descripcion = $request->descripcion;
       $activo = $request->activo;
+      $evento = $request->evento;
       $autor = Auth::user()->pluck('uuid')->first();
       //validacion
-
       DB::beginTransaction();
-      Pub::create([
-         //colocar uuid? para conectar todas tablas y vistas??
-         'titulo' => $titulo,
-         'fecha_publicacion' => date_format(date_create($fecha),'Y-m-d'),
-         'resumen' => $resumen,
-         'cuerpo' => $descripcion,
-         'autor' => $autor,
-         'activa' => $activa
-       ]);
+        Pub::create([
+           //colocar uuid? para conectar todas tablas y vistas??
+           'titulo' => $titulo,
+           'fecha_publicacion' => date_format(date_create($fecha),'Y-m-d'),
+           'resumen' => $resumen,
+           'cuerpo' => $descripcion,
+           'autor' => $autor,
+           'activa' => $activo,
+           'evento' => $evento
+         ]);
        DB::commit();
 
        return redirect()->back()->with([
          'titulo' => 'Actualización exitosa',
-         'mensaje' => '',
+         'mensaje' => 'Publicacion Realizada',
          'tipo' => 'success'
        ]);
      } catch (\Exception $e) {
-
        DB::rollback();
-
        return $e->getMessage();
      }
   }
 
+  public function cumpleanios(){
+    setlocale(LC_TIME, 'es_ES');
+    $cumpleanios = DB::table('empresas_empleados')
+      ->whereraw('month(fecha_nacimiento)=month(NOW())')
+      ->get();
+      //dd($cumpleanios);
+    return view('cumpleanios',compact('cumpleanios'));
+  }
+  public function calendario(){
+
+    return view('calendario');
+  }
+  public function eventos(){
+    $hoy = Carbon::today()->toDateString();
+    $lista_eventos = Pub::orderBy('fecha_publicacion','desc')
+      ->with('autor_pub:uuid,primer_nombre,apellido_paterno')
+      ->where('evento',true)
+      ->where('fecha_publicacion','<=',$hoy)
+      ->get();
+    return view('eventos',compact('lista_eventos'));
+  }
   public function getList() {
   return "Lista de todos los post por GET";
   }
