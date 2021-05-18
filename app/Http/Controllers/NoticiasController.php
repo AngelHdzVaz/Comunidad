@@ -16,22 +16,52 @@ use App\Models\Usuario as Usua ;
 use App\Models\Personas_correo as PCor ;
 use App\Models\Publicacione as Pub;
 use Carbon\Carbon;
+use Jenssegers\Date\Date;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class NoticiasController extends Controller
 {
+
+  public function paginacion($array, $request, $perPage) {
+    $page = $request->input('page', 1);
+    $offset = ($page * $perPage) - $perPage;
+
+    return new LengthAwarePaginator(array_slice($array, $offset, $perPage, true), count($array), $perPage, $page,
+        ['path' => $request->url(), 'query' => $request->query()]);
+  }
+
   public function verNoticias(Request $request){
     $hoy = Carbon::today()->toDateString();
-    $month = Carbon::today()->format('M');
 
-    $lista_noticias = Pub::orderBy('fecha_publicacion','desc')
-      ->with('autor_pub:uuid,primer_nombre,apellido_paterno')
+    $lista_noticias = Pub::with('autor_pub:uuid,primer_nombre,apellido_paterno')
       ->where('activa',true)
       ->where('fecha_publicacion','<=',$hoy)
+      ->orderBy('fecha_publicacion','desc')
       ->get();
+    $lista_noticias = $this->paginacion($lista_noticias->all(), $request,6);
     return view('noticias',compact('lista_noticias'));
   }
 
+  public function verNoticiasMes(Request $request){
+    $mes = $request->mes;
+    $lista_noticias = Pub::with('autor_pub:uuid,primer_nombre,apellido_paterno')
+      ->where('activa',true)
+      ->whereMonth('fecha_publicacion','=',$mes)
+      ->orderBy('fecha_publicacion','desc')
+      ->get();
+    $lista_noticias = $this->paginacion($lista_noticias->all(), $request,6);
+    $actual = null;
+    $meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    for($i = 1; $i <= count($meses); ++$i){
+      if($mes==$i){
+        $actual = $meses[$i-1];
+      }
+    }
+    return view('lista_noticias_mes',compact('lista_noticias','actual'));
+  }
+
   public function verRegistroNoticia(Request $request){
+
     return view('registro_noticia');
   }
 
@@ -47,7 +77,6 @@ class NoticiasController extends Controller
       //validacion
       DB::beginTransaction();
         Pub::create([
-           //colocar uuid? para conectar todas tablas y vistas??
            'titulo' => $titulo,
            'fecha_publicacion' => date_format(date_create($fecha),'Y-m-d'),
            'resumen' => $resumen,
@@ -70,17 +99,17 @@ class NoticiasController extends Controller
   }
 
   public function cumpleanios(){
-    setlocale(LC_TIME, 'es_ES');
     $cumpleanios = DB::table('empresas_empleados')
+      ->where('fecha_nacimiento','!=',null)
       ->whereraw('month(fecha_nacimiento)=month(NOW())')
       ->get();
-      //dd($cumpleanios);
     return view('cumpleanios',compact('cumpleanios'));
   }
-  public function calendario(){
 
+  public function calendario(){
     return view('calendario');
   }
+
   public function eventos(){
     $hoy = Carbon::today()->toDateString();
     $lista_eventos = Pub::orderBy('fecha_publicacion','desc')
@@ -89,28 +118,6 @@ class NoticiasController extends Controller
       ->where('fecha_publicacion','<=',$hoy)
       ->get();
     return view('eventos',compact('lista_eventos'));
-  }
-  public function getList() {
-  return "Lista de todos los post por GET";
-  }
-  public function getPost($id) {
-    return "Ver post, se pasa como parámetro la ID para buscarlo";
-  }
-  public function postSavepost() {
-    return "Guardar post por POST";
-  }
-  public function getEditpost($id = null) {
-    return "Editar Post, ID para saber cual es.";
-  }
-  public function getDeletepost($id) {
-    return "Borrar Post, ID para saber cual es.";
-  }
-
-  public function postCreatecomment() {
-    return "Crearmos el comentario";
-  }
-  public function getDeletecomment($id) {
-      return "Borramos el comentario";
   }
 
 }

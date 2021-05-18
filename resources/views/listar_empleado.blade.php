@@ -35,7 +35,7 @@
 
         <tr>
         <td>{{ $empleado->primer_nombre ." ".$empleado->segundo_nombre." ".$empleado->apellido_paterno ." ".$empleado->apellido_materno  }}</td>
-        <td>{{ $empleado->fecha_nacimiento}}</td>
+        <td>{{ Carbon\Carbon::parse($empleado->fecha_nacimiento)->format('d - m')}}</td>
         <td>{{$empleado->curp}}</td>
         <td>{{$empleado->rfc}}</td>
         <td>{{$empleado->n_seguro_social}}</td>
@@ -46,7 +46,7 @@
           @if(Auth::user()->email == 'admin@oshuntrading.com')
 
           <td><button class="btn" type="button" onclick= "location.href='{{ route('VerEditorEmpleado',['uuid'=>$empleado->where('uuid',$empleado->uuid)->pluck('uuid')->first() ]) }}'"><i class="fas fa-edit "></i> Editar</button>
-              <button class="btn" type="button" onclick= "location.href='{{ route('VerEditorEmpleado',['uuid'=>$empleado->where('uuid',$empleado->uuid)->pluck('uuid')->first() ]) }}'"><i class="fas fa-dumpster-fire"></i>Eliminar</button>
+              <button class="btn" type="button" onclick= "location.href='{{ route('EliminarEmpleado',['uuid'=>$empleado->where('uuid',$empleado->uuid)->pluck('uuid')->first() ]) }}'"><i class="fas fa-dumpster-fire"></i>Eliminar</button>
           </td>
           @endif
           @endauth

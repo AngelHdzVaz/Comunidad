@@ -15,6 +15,7 @@ use App\Models\Empresas_empleado as EEmp;
 use App\Models\Persona as Per ;
 use App\Models\Usuario as Usua ;
 use App\Models\Personas_correo as PCor ;
+use App\Models\Publicacione as Pubc;
 use Carbon\Carbon;
 
 
@@ -149,14 +150,14 @@ class UsuariosController extends Controller
         //validacion
         if($primer_nombre){
           if (!ctype_alpha($primer_nombre)) {
-            return redirect()->back()->with([
+            return redirect()->back()->withInput()->with([
               'titulo' => 'Verifica el campo Nombre',
               'mensaje' => 'El valor recibido no contiene unicamente letras',
               'tipo' => 'error'
             ]);
           }
           }else{
-          return redirect()->back()->with([
+          return redirect()->back()->withInput()->with([
             'titulo' => 'Verifica el campo Primer Nombre',
             'mensaje' => 'El campo esta vacío',
             'tipo' => 'error'
@@ -165,7 +166,7 @@ class UsuariosController extends Controller
 
         if($segundo_nombre){
           if (!ctype_alpha($segundo_nombre)) {
-            return redirect()->back()->with([
+            return redirect()->back()->withInput()->with([
               'titulo' => 'Verifica el campo Nombre',
               'mensaje' => 'El valor recibido no contiene unicamente letras',
               'tipo' => 'error'
@@ -175,14 +176,14 @@ class UsuariosController extends Controller
 
         if($apellido_paterno){
           if (!ctype_alpha($apellido_paterno)) {
-            return redirect()->back()->with([
+            return redirect()->back()->withInput()->with([
               'titulo' => 'Verifica el campo Apellido Paterno',
               'mensaje' => 'El valor recibido no contiene unicamente letras',
               'tipo' => 'error'
             ]);
           }
           }else{
-          return redirect()->back()->with([
+          return redirect()->back()->withInput()->with([
             'titulo' => 'Verifica el campo Apellido',
             'mensaje' => 'El campo esta vacío',
             'tipo' => 'error'
@@ -191,7 +192,7 @@ class UsuariosController extends Controller
 
         if($apellido_materno){
           if (!ctype_alpha($apellido_materno)) {
-            return redirect()->back()->with([
+            return redirect()->back()->withInput()->with([
               'titulo' => 'Verifica el campo Apellido Materno',
               'mensaje' => 'El valor recibido no contiene unicamente letras',
               'tipo' => 'error'
@@ -200,7 +201,7 @@ class UsuariosController extends Controller
         }
 
         if(!$fecha_nacimiento){
-          return redirect()->back()->with([
+          return redirect()->back()->withInput()->with([
             'titulo' => 'Verifica fecha de nacimiento',
             'mensaje' => 'El campo esta vacío',
             'tipo' => 'error'
@@ -209,14 +210,14 @@ class UsuariosController extends Controller
 
         if($rfc){
           if (strlen ($rfc)>13){
-            return redirect()->back()->with([
+            return redirect()->back()->withInput()->with([
               'titulo' => 'Verifica el campo RFC',
               'mensaje' => 'El valor que ingresaste no es válido',
               'tipo' => 'error'
             ]);
           }
           }else {
-          return redirect()->back()->with([
+          return redirect()->back()->withInput()->with([
             'titulo' => 'Verifica el campo RFC',
             'mensaje' => 'El valorno puede estar vacío',
             'tipo' => 'error'
@@ -225,14 +226,14 @@ class UsuariosController extends Controller
 
         if($curp){
           if (strlen ($curp)!=18 ){
-            return redirect()->back()->with([
+            return redirect()->back()->withInput()->with([
               'titulo' => 'Verifica el campo curp',
               'mensaje' => 'El valor que ingresaste no es válido',
               'tipo' => 'error'
             ]);
           }
           }else {
-          return redirect()->back()->with([
+          return redirect()->back()->withInput()->with([
             'titulo' => 'Verifica el campo curp',
             'mensaje' => 'El valor no puede estar vacío',
             'tipo' => 'error'
@@ -241,21 +242,21 @@ class UsuariosController extends Controller
 
         if($numero_seguro_social){
           if (strlen ($numero_seguro_social)>11){
-            return redirect()->back()->with([
+            return redirect()->back()->withInput()->with([
               'titulo' => 'Verifica el campo NSS',
               'mensaje' => 'El valor que ingresaste no es válido',
               'tipo' => 'error'
             ]);
           }
           if(!is_numeric($numero_seguro_social) ){
-            return redirect()->back()->with([
+            return redirect()->back()->withInput()->with([
               'titulo' => 'Verifica el campo NSS',
               'mensaje' => 'El valor que ingresaste no es válido',
               'tipo' => 'error'
             ]);
           }
           }else{
-            return redirect()->back()->with([
+            return redirect()->back()->withInput()->with([
               'titulo' => 'Verifica el campo NSS',
               'mensaje' => 'El valor no puede estar vacío',
               'tipo' => 'error'
@@ -264,14 +265,14 @@ class UsuariosController extends Controller
 
         if($correo_empresa){
           if (!filter_var($correo_empresa, FILTER_VALIDATE_EMAIL)) {
-            return redirect()->back()->with([
+            return redirect()->back()->withInput()->with([
               'titulo' => 'Verifica el campo Correo Empresa',
               'mensaje' => 'El valor que ingresaste no es válido',
               'tipo' => 'error'
             ]);
           }
           }else{
-            return redirect()->back()->with([
+            return redirect()->back()->withInput()->with([
               'titulo' => 'Verifica el campo Correo Empresa',
               'mensaje' => 'El valor esta vacío',
               'tipo' => 'error'
@@ -280,14 +281,14 @@ class UsuariosController extends Controller
 
         if($correo_personal){
           if (!filter_var($correo_personal, FILTER_VALIDATE_EMAIL)) {
-            return redirect()->back()->with([
+            return redirect()->back()->withInput()->with([
               'titulo' => 'Verifica el campo Correo Personal',
               'mensaje' => 'El valor que ingresaste no es válido',
               'tipo' => 'error'
               ]);
             }
           }else{
-            return redirect()->back()->with([
+            return redirect()->back()->withInput()->with([
               'titulo' => 'Verifica el campo Correo Personal',
               'mensaje' => 'El valor esta vacío',
               'tipo' => 'error'
@@ -296,7 +297,7 @@ class UsuariosController extends Controller
 
         $correo_empresa_existe = PCor::select('id')->where('email_empresa',$correo_empresa)->first();
         if($correo_empresa_existe!=null){
-          return redirect()->back()->with([
+          return redirect()->back()->withInput()->with([
             'titulo' => 'Correo no aceptado',
             'mensaje' => 'El correo empresarial ya ha sido registrado',
             'tipo' => 'error'
@@ -305,7 +306,7 @@ class UsuariosController extends Controller
 
         $correo_personal_existe = PCor::select('id')->where('email_personal',$correo_personal)->first();
         if($correo_personal_existe!=null){
-          return redirect()->back()->with([
+          return redirect()->back()->withInput()->with([
             'titulo' => 'Correo no aceptado',
             'mensaje' => 'El correo personal ya ha sido registrado',
             'tipo' => 'error'
@@ -314,7 +315,7 @@ class UsuariosController extends Controller
 
         $rfc_existe = EEmp::select('id')->where('rfc',$rfc)->first();
         if($rfc_existe!=null){
-          return redirect()->back()->with([
+          return redirect()->back()->withInput()->with([
             'titulo' => 'RFC no aceptado',
             'mensaje' => 'RFC ya registrado',
             'tipo' => 'error'
@@ -323,7 +324,7 @@ class UsuariosController extends Controller
 
         $numero_seguro_social_existe = EEmp::select('id')->where('n_seguro_social',$numero_seguro_social)->first();
         if($numero_seguro_social_existe!=null){
-          return redirect()->back()->with([
+          return redirect()->back()->withInput()->with([
             'titulo' => 'Numero de Seguro Social',
             'mensaje' => 'Ya se encuentra registrado',
             'tipo' => 'error'
@@ -331,8 +332,6 @@ class UsuariosController extends Controller
           }
 
         DB::beginTransaction();
-
-
        EEmp::create([
           //colocar uuid? para conectar todas tablas y vistas??
           'uuid' => (string) Str::uuid(),
@@ -719,6 +718,25 @@ class UsuariosController extends Controller
     }
   }
 
+  public function eliminarEmpleado(Request $request){
+    try {
+      $uuid = $request->uuid;
+      DB::beginTransaction();
 
+      EEmp::where('uuid',$uuid)->delete();
+      Per::where('uuid',$uuid)->delete();
+      PCor::where('uuid',$uuid)->delete();
+      Usua::where('uuid',$uuid)->delete();
+      Pubc::where('uuid',$uuid)->delete();
+      DB::commit();
+      return redirect()->back()->with([
+        'titulo' => 'Colaborador borrado exitosamente',
+        'mensaje' => '',
+        'tipo' => 'success'
+        ]);
+    } catch (\Exception $e) {
+      return $e->getMessage();
+    }
+  }
 
 }

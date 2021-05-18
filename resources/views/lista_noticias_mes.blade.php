@@ -36,8 +36,8 @@
   <div class="row g-5">
     <div class="col-md-8">
       <h3 class="pb-4 mb-4 fst-italic border-bottom">
-        Ultimas Noticias
-      </h3>
+      Noticias del mes de {{$actual}}
+    </h3>
         @foreach($lista_noticias as $noticia)
             <article class="blog-post"  id="{{ Carbon\Carbon::parse($noticia->fecha_publicacion)->format(' M ') }}">
               <h2 class="blog-post-title">{{ $noticia->titulo  }}</h2>

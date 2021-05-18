@@ -41,8 +41,10 @@ Route::post('/RegistroEmpleado', [UsuariosController::class, 'registrarEmpleado'
 Route::get('/listarEmpleado',[UsuariosController::class, 'listarEmpleado'])->name('ListarEmpleado');
 Route::get('/editarEmpleado',[UsuariosController::class, 'verEditorEmpleado'])->name('VerEditorEmpleado');
 Route::post('/editarEmpleado', [UsuariosController::class, 'editorEmpleado'])->name('EditorEmpleado');
+Route::get('/eliminarEmpleado',[UsuariosController::class,'eliminarEmpleado'])->name('EliminarEmpleado');
 
 Route::get('/noticias',[NoticiasController::class, 'verNoticias'])->name('VerNoticias');
+Route::get('/noticias/{mes}',[NoticiasController::class, 'verNoticiasMes'])->name('VerNoticiasMes');
 Route::get('/verRegistroNoticia',[NoticiasController::class, 'verRegistroNoticia'])->name('VerRegistroNoticia');
 Route::post('/registroNoticia',[NoticiasController::class,'registrarNoticia'])->name('RegistrarNoticia');
 

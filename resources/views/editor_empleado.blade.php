@@ -6,7 +6,7 @@
               <div class="card-header align-center text-center">
                 <div class="row">
                       <div class="col-md-3 text-left">
-                        <button type="submit" class="btn btn-primary " onclick="location.href='{{ route('home') }}'"> Regresar</button>
+                        <button type="submit" class="btn btn-primary " onclick="location.href='{{ route('ListarEmpleado') }}'"> Regresar</button>
                       </div>
                       <div class="col-md-6">
                         <h3>{{ __('Editar Empleado') }}</h3>

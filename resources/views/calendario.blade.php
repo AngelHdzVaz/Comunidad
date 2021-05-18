@@ -33,7 +33,7 @@
 
     <div class="container">
       <div style="height:50px"></div>
-
+      <button type="submit" class="btn btn-primary " onclick="location.href='{{ route('VerNoticias') }}'"> Regresar</button>
       <p class="lead">
       <h3>Calendario - evento</h3>
       <a class="btn btn-default"  href="{{ asset('/Evento/form') }}">Crear una nota</a>

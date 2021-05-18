@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<h1>Eventos</h1>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -23,6 +23,9 @@
 
 </head>
 <body>
+<div class="container">
+  <h1>Eventos</h1>
+    <button type="submit" class="btn btn-primary " onclick="location.href='{{ route('VerNoticias') }}'"> Regresar</button>
 <div class="row g-5">
   <div class="col-md-8">
     @foreach($lista_eventos as $evento)

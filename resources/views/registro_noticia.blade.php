@@ -2,10 +2,11 @@
 @section('content')
 <div class="container">
   <section class="row">
-  	<article class="col-md-8">
   		<div class="page-header">
-
   			<h1>Editar o crear post</h1>
+        <div class="text-left">
+          <button type="submit" class="btn btn-primary " onclick="location.href='{{ route('VerNoticias') }}'"> Regresar</button>
+        </div>
   		</div>
   		<form method="POST" action="{{ route('RegistrarNoticia') }}">
         @csrf
@@ -32,7 +33,6 @@
         </div>
           <button type="submit" class="btn btn-primary"> Guardar </button>
   		</form>
-  	</article>
   </section>
 </div>
 @endsection
