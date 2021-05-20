@@ -39,6 +39,7 @@ class NoticiasController extends Controller
       ->orderBy('fecha_publicacion','desc')
       ->get();
     $lista_noticias = $this->paginacion($lista_noticias->all(), $request,6);
+    setlocale(LC_ALL, 'es');
     return view('noticias',compact('lista_noticias'));
   }
 
@@ -57,6 +58,7 @@ class NoticiasController extends Controller
         $actual = $meses[$i-1];
       }
     }
+    setlocale(LC_ALL, 'es');
     return view('lista_noticias_mes',compact('lista_noticias','actual'));
   }
 
@@ -103,6 +105,7 @@ class NoticiasController extends Controller
       ->where('fecha_nacimiento','!=',null)
       ->whereraw('month(fecha_nacimiento)=month(NOW())')
       ->get();
+      setlocale(LC_ALL, 'es');
     return view('cumpleanios',compact('cumpleanios'));
   }
 

@@ -388,6 +388,7 @@ class UsuariosController extends Controller
   public function listarEmpleado(Request $request){
 
     $empleados = EEmp::with('correo_EEmp')->with('usuario_EEmp')->with('persona_EEmp')->get();
+    setlocale(LC_ALL, 'es');
     return view('listar_empleado',compact('empleados'));
   }
 

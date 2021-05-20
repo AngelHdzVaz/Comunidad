@@ -46,7 +46,7 @@
 
                       <label for="name" class="col-md-4 col-form-label text-md-center">Fecha de Nacmimiento<span class="text-red">*</span></label>
                       <div class="p-2 col-md-6">
-                          <input class="form-control text-center" type="date"  id="ipt_fecha_nacimiento" name="fecha_nacimiento" value="{{ old('fecha_nacimiento') }}" >
+                          <input class="form-control text-center" id="ipt_fecha_nacimiento" name="fecha_nacimiento" value="{{ old('fecha_nacimiento') }}" >
                       </div>
 
 

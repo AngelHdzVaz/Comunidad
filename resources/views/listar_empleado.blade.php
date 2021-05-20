@@ -35,7 +35,7 @@
 
         <tr>
         <td>{{ $empleado->primer_nombre ." ".$empleado->segundo_nombre." ".$empleado->apellido_paterno ." ".$empleado->apellido_materno  }}</td>
-        <td>{{ Carbon\Carbon::parse($empleado->fecha_nacimiento)->format('d - m')}}</td>
+        <td>{{ Carbon\Carbon::parse(strtotime($empleado->fecha_nacimiento))->formatLocalized('%d - %B ')}}</td>
         <td>{{$empleado->curp}}</td>
         <td>{{$empleado->rfc}}</td>
         <td>{{$empleado->n_seguro_social}}</td>

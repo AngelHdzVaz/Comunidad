@@ -30,7 +30,6 @@
         }
       }
     </style>
-
   </head>
   <body>
   <div class="row g-5">
@@ -41,7 +40,7 @@
         @foreach($lista_noticias as $noticia)
             <article class="blog-post"  id="{{ Carbon\Carbon::parse($noticia->fecha_publicacion)->format(' M ') }}">
               <h2 class="blog-post-title">{{ $noticia->titulo  }}</h2>
-              <p class="blog-post-meta" >{{ $noticia->fecha_publicacion  }} publicado: <a href="#">{{ $noticia->autor_pub->primer_nombre." ".$noticia->autor_pub->apellido_paterno  }}</a></p>
+              <p class="blog-post-meta" >{{   Carbon\Carbon::parse(strtotime($noticia->fecha_publicacion))->formatLocalized('%d %B %Y')  }} publicado: <a href="#">{{ $noticia->autor_pub->primer_nombre." ".$noticia->autor_pub->apellido_paterno  }}</a></p>
               <p>{{ $noticia->resumen}}</p>
               <hr>
               <p>{{ $noticia->cuerpo}}</p>
