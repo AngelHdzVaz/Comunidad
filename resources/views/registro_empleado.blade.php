@@ -43,13 +43,6 @@
                           <input id="ipt_apellido_materno" type="text" class="form-control " name="apellido_materno" value="{{ old('apellido_materno') }}"  >
                       </div>
 
-
-                      <label for="name" class="col-md-4 col-form-label text-md-center">Fecha de Nacmimiento<span class="text-red">*</span></label>
-                      <div class="p-2 col-md-6">
-                          <input class="form-control text-center" id="ipt_fecha_nacimiento" name="fecha_nacimiento" value="{{ old('fecha_nacimiento') }}" >
-                      </div>
-
-
                       <label for="name" class="col-md-4 col-form-label text-md-center">Curp<span class="text-red">*</span></label>
                       <div class="p-2 col-md-6p-2 col-md-6">
                           <input class="form-control" type="name"  id="ipt_curp" name="curp" value=" {{ old( 'curp') }}" >

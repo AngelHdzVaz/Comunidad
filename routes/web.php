@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\NoticiasController;
+use App\Http\Controllers\ComentariosController;
 use Illuminate\Support\Str;
 
 /*
@@ -32,10 +33,11 @@ Route::get('/', function () {
 
 
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/verPreregistro',[UsuariosController::class, 'verPreregistro'])->name('VerPreregistro');
 Route::post('/rPreregistro',[UsuariosController::class, 'realizarPreRegistro'])->name('RealizarPreRegistro');
 Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/verRegistroEmpleado',[UsuariosController::class, 'verRegistroEmpleado'])->name('VerRegistroEmpleado');
 Route::post('/RegistroEmpleado', [UsuariosController::class, 'registrarEmpleado'])->name('RegistrarEmpleado');
 Route::get('/listarEmpleado',[UsuariosController::class, 'listarEmpleado'])->name('ListarEmpleado');
@@ -43,10 +45,17 @@ Route::get('/editarEmpleado',[UsuariosController::class, 'verEditorEmpleado'])->
 Route::post('/editarEmpleado', [UsuariosController::class, 'editorEmpleado'])->name('EditorEmpleado');
 Route::get('/eliminarEmpleado',[UsuariosController::class,'eliminarEmpleado'])->name('EliminarEmpleado');
 
+
 Route::get('/noticias',[NoticiasController::class, 'verNoticias'])->name('VerNoticias');
+Route::get('/noticias/comentario',[ComentariosController::class,'comentarNoticia'])->name('ComentarNoticia');
+Route::get('noticias/eliminarComentario',[ComentariosController::class,'eliminarComentario'])->name('EliminarComentario');
+Route::get('noticias/responderComentario',[ComentariosController::class,'responderComentario'])->name('ResponderComentario');
+Route::get('noticias/traducirComentario',[ComentariosController::class,'traducirComentario'])->name('TraducirComentario');
+
 Route::get('/noticias/{mes}',[NoticiasController::class, 'verNoticiasMes'])->name('VerNoticiasMes');
 Route::get('/verRegistroNoticia',[NoticiasController::class, 'verRegistroNoticia'])->name('VerRegistroNoticia');
 Route::post('/registroNoticia',[NoticiasController::class,'registrarNoticia'])->name('RegistrarNoticia');
+
 
 Route::get('/cumpleanios',[NoticiasController::class,'cumpleanios'])->name('Cumpleanios');
 Route::get('/calendario',[NoticiasController::class,'calendario'])->name('Calendario');

@@ -15,6 +15,7 @@ use App\Models\Persona as Per ;
 use App\Models\Usuario as Usua ;
 use App\Models\Personas_correo as PCor ;
 use App\Models\Publicacione as Pub;
+use App\Models\Comentario as Com;
 use Carbon\Carbon;
 use Jenssegers\Date\Date;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -31,21 +32,24 @@ class NoticiasController extends Controller
   }
 
   public function verNoticias(Request $request){
-    $hoy = Carbon::today()->toDateString();
+    $hoy = Carbon::now()->toDateString();
 
     $lista_noticias = Pub::with('autor_pub:uuid,primer_nombre,apellido_paterno')
+      ->with('comments_pub')
       ->where('activa',true)
       ->where('fecha_publicacion','<=',$hoy)
       ->orderBy('fecha_publicacion','desc')
       ->get();
     $lista_noticias = $this->paginacion($lista_noticias->all(), $request,6);
     setlocale(LC_ALL, 'es');
+
     return view('noticias',compact('lista_noticias'));
   }
 
   public function verNoticiasMes(Request $request){
     $mes = $request->mes;
     $lista_noticias = Pub::with('autor_pub:uuid,primer_nombre,apellido_paterno')
+      ->with('comments_pub')
       ->where('activa',true)
       ->whereMonth('fecha_publicacion','=',$mes)
       ->orderBy('fecha_publicacion','desc')
@@ -116,6 +120,7 @@ class NoticiasController extends Controller
   public function eventos(){
     $hoy = Carbon::today()->toDateString();
     $lista_eventos = Pub::orderBy('fecha_publicacion','desc')
+      ->with('comments_pub')
       ->with('autor_pub:uuid,primer_nombre,apellido_paterno')
       ->where('evento',true)
       ->where('fecha_publicacion','<=',$hoy)

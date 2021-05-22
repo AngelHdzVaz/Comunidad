@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use  App\Models\Empresas_empleado as EEmp;
+use App\Models\Comentario as Com;
 
 class Publicacione extends Model
 {
@@ -19,15 +20,12 @@ class Publicacione extends Model
       'activa'
     ];
 
-public function autor_pub(){
-    return $this->belongsTo(EEmp::class,'autor','uuid');
-}
-
-    public function comments(){
-      return $this->hasMany('App\Models\Commentario', 'cuerpo');
+    public function autor_pub(){
+        return $this->belongsTo(EEmp::class,'autor','uuid');
     }
 
-
-
+    public function comments_pub(){
+      return $this->hasMany(Com::class,'id_noticia','id')->orderBy('fecha','desc');
+    }
 
 }

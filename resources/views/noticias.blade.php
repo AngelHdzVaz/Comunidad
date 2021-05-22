@@ -43,6 +43,51 @@
               <p>{{ $noticia->resumen}}</p>
               <hr>
               <p>{{ $noticia->cuerpo}}</p>
+              <form name="comentario" method="get" action="{{ route('ComentarNoticia') }}">
+                <input type="hidden" name="noticia" VALUE="{{$noticia->id}}">
+                <input type="hidden" name="autor" VALUE="{{$noticia->autor}}">
+                <div class="col-md-9">
+                  <input id="ipt_comentario" type="text" class="form-control " name="comentario" value="{{ old('comentario') }}" placeholder="Escribe tu comentario..." >
+                </div>
+                <div class="col-md-3">
+                  <input type="submit" class="btn btn-primary" value="Comentar">
+                </div>
+                <div class="p-2 col-md-12">
+                </div>
+              </form>
+
+                  <div class="card p-3">
+                      @foreach($noticia->comments_pub as $comentario)
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="user d-flex flex-row align-items-center">
+                         <img src="{{asset('images/comunity.jpg')}}" width="30" class="user-img rounded-circle mr-2">
+                          <span><small class="font-weight-bold text-primary">{{$comentario->autor->primer_nombre ." ".$comentario->autor->apellido_paterno}}</small>
+                         <small class="font-weight-bold">{{$comentario->comentario}}</small></span> </div>
+                         <small>{{Carbon\Carbon::parse(strtotime($comentario->created_at))->formatLocalized('%d de %B del %Y %H:%M:%S')}} </small>
+                    </div>
+                    <div class="action d-flex justify-content-between mt-2 align-items-center">
+                      <div class="reply px-4">
+                          <button class="dots col-md-4 btn" type="button" onclick="location.href='{{route('EliminarComentario',['uuid_comentario'=>$comentario->comentario_uuid,'autor'=>$comentario->autor_comentario_uuid,'respuesta'=>$comentario->respuesta])}}'">Eliminar</button>
+                          <button class="dots col-md-4 btn" type="button" data-toggle="collapse" data-target="#responder-{{$comentario->comentario_uuid}}" aria-expanded="false" aria-controls="responder">Responder</button>
+                          <div class="form-group collapse my-3 col-md-9" id="responder-{{$comentario->comentario_uuid}}">
+                          <form name="responder_comentario" method="get" action="{{ route('ResponderComentario') }}">
+                              <input type="hidden" name="noticia" VALUE="{{$noticia->id}}">
+                              <input type="hidden" name="comentario_padre_uuid" VALUE="{{$comentario->comentario_uuid}}">
+                              <div class="form-group collapse my-3 col-md-12" id="responder-{{$comentario->comentario_uuid}}">
+                                <input id="ipt_responder_comentario" type="text" class="form-control col-md-6" name="comentario_respuesta" value="{{ old('comentario_respuesta') }}" placeholder="Escribe tu comentario..." >
+                                <div class=col-md-2 >
+                                </div>
+                                <button type="submit" class="btn btn-primary col-md-4 ">Responder</button>
+                              </div>
+                            </form>
+                          </div>
+                          <button class="dots col-md-4 btn" type="button" onclick="location.href='{{route('TraducirComentario',['uuid_comentario'=>$comentario->comentario_uuid,'autor'=>$comentario->autor_comentario_uuid,'respuesta'=>$comentario->respuesta])}}'">Traducir</button>
+                       </div>
+                             <div class="icons align-items-center"> <i class="fa fa-star text-warning"></i>
+                              <i class="fas fa-check"></i>
+                    </div>
+                  </div>
+                @endforeach
             </article>
         @endforeach
         <div class="p-3">

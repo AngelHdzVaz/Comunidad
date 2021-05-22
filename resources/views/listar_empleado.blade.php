@@ -17,7 +17,6 @@
       <thead>
         <tr>
           <th scope="col">Nombre</th>
-          <th scope="col">Fecha de Nacimiento</th>
           <th scope="col">Curp</th>
           <th scope="col">RFC</th>
           <th scope="col">NSS</th>
@@ -34,8 +33,7 @@
         @foreach($empleados as $empleado)
 
         <tr>
-        <td>{{ $empleado->primer_nombre ." ".$empleado->segundo_nombre." ".$empleado->apellido_paterno ." ".$empleado->apellido_materno  }}</td>
-        <td>{{ Carbon\Carbon::parse(strtotime($empleado->fecha_nacimiento))->formatLocalized('%d - %B ')}}</td>
+        <td>{{ $empleado->primer_nombre." ".$empleado->segundo_nombre." ".$empleado->apellido_paterno." ".$empleado->apellido_materno  }}</td>
         <td>{{$empleado->curp}}</td>
         <td>{{$empleado->rfc}}</td>
         <td>{{$empleado->n_seguro_social}}</td>
@@ -54,5 +52,8 @@
         @endforeach
       </tbody>
     </table>
+    <div class="p-3">
+      {{$empleados->links()}}
+    </div>
   </div>
 @endsection

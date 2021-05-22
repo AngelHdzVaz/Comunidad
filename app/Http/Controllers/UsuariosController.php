@@ -17,10 +17,20 @@ use App\Models\Usuario as Usua ;
 use App\Models\Personas_correo as PCor ;
 use App\Models\Publicacione as Pubc;
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 
 class UsuariosController extends Controller
 {
+
+  public function paginacion($array, $request, $perPage) {
+    $page = $request->input('page', 1);
+    $offset = ($page * $perPage) - $perPage;
+
+    return new LengthAwarePaginator(array_slice($array, $offset, $perPage, true), count($array), $perPage, $page,
+        ['path' => $request->url(), 'query' => $request->query()]);
+  }
+
   public function loginUsuario(Request $request){
     try {
       $email = $request->email;
@@ -138,11 +148,9 @@ class UsuariosController extends Controller
       $segundo_nombre = $request->segundo_nombre;
       $apellido_paterno = $request->apellido_paterno;
       $apellido_materno = $request->apellido_materno;
-      $fecha_nacimiento = $request->fecha_nacimiento;
       $rfc = $request->rfc;
       $curp = $request->curp;
       $numero_seguro_social = $request->numero_seguro_social;
-      $codigo_postal = $request->codigo_postal;
       $correo_empresa = $request->correo_empresa;
       $correo_personal =$request->correo_personal;
       $contrasenia =$request->contrasenia;
@@ -198,14 +206,6 @@ class UsuariosController extends Controller
               'tipo' => 'error'
             ]);
           }
-        }
-
-        if(!$fecha_nacimiento){
-          return redirect()->back()->withInput()->with([
-            'titulo' => 'Verifica fecha de nacimiento',
-            'mensaje' => 'El campo esta vacío',
-            'tipo' => 'error'
-          ]);
         }
 
         if($rfc){
@@ -339,7 +339,6 @@ class UsuariosController extends Controller
           'segundo_nombre' => $segundo_nombre,
           'apellido_paterno' => $apellido_paterno,
           'apellido_materno' => $apellido_materno,
-          'fecha_nacimiento' => $fecha_nacimiento,
           'rfc' => $rfc,
           'curp' => $curp,
           'n_seguro_social' => $numero_seguro_social
@@ -357,8 +356,7 @@ class UsuariosController extends Controller
           'primer_nombre' => $primer_nombre,
           'segundo_nombre' => $segundo_nombre,
           'apellido_paterno' => $apellido_paterno,
-          'apellido_materno' => $apellido_materno,
-          'fecha_nacimiento' => $fecha_nacimiento
+          'apellido_materno' => $apellido_materno
         ]);
 
         $uuid_nuevo = Usua::select('uuid')->where('email',$correo_empresa)->pluck('uuid')->first();
@@ -386,10 +384,23 @@ class UsuariosController extends Controller
   }
 
   public function listarEmpleado(Request $request){
-
-    $empleados = EEmp::with('correo_EEmp')->with('usuario_EEmp')->with('persona_EEmp')->get();
-    setlocale(LC_ALL, 'es');
-    return view('listar_empleado',compact('empleados'));
+    if(Auth::check()){
+      $empleados = EEmp::with('correo_EEmp')
+      ->orderBy('apellido_paterno')
+      ->with('usuario_EEmp')
+      ->with('persona_EEmp')
+      ->get();
+      $empleados = $this->paginacion($empleados->all(), $request,4);
+      setlocale(LC_ALL, 'es');
+      return view('listar_empleado',compact('empleados'));
+    }else{
+      Log::debug('UsuariosController@listarEmpleado no se esta logueado');
+      return redirect()->back()->with([
+        'titulo' => 'Ha ocurrido un error',
+        'mensaje' => 'Intenta nuevamente mas tarde',
+        'tipo' => 'error'
+      ]);
+    }
   }
 
   public function verEditorEmpleado(Request $request){
