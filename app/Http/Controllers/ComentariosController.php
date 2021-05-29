@@ -13,8 +13,6 @@ use Ctt;
 use App\Mail\PreregistroContactanos;
 use App\Models\Preregistro as PreR ;
 use App\Models\Empresas_empleado as EEmp;
-use App\Models\Persona as Per ;
-use App\Models\Usuario as Usua ;
 use App\Models\Comentario as Com ;
 use App\Models\Personas_correo as PCor ;
 use App\Models\Publicacione as Pubc;
@@ -31,7 +29,7 @@ class ComentariosController extends Controller
       $autor = Auth::user()->pluck('uuid')->first();
       //validacion
       $fecha = Carbon::now()->toDateString();
-
+    // dd($noticia,$comentario,$autor);
       DB::beginTransaction();
         Com::create([
            'id_noticia' => $noticia,
@@ -54,20 +52,25 @@ class ComentariosController extends Controller
   }
 
   public function eliminarComentario(Request $request){
+
     try {
       $uuid_comentario = $request->uuid_comentario;
-      $respuesta = $request->respuesta;
+      $comentario = $request->comentario;
       $autor = $request->autor;
-
+      $respuesta = $request->respuesta;
+      //dd($uuid_comentario,$comentario,$autor,$respuesta);
       DB::beginTransaction();
 
-    //  dd($uuid_comentario,$respuesta,$autor,$valor);
+
       if($respuesta!=null){
         Com::where('comentario_padre_uuid',$respuesta)
+          ->where('comentario_uuid',$uuid_comentario)
           ->where('autor_comentario_uuid',$autor)
+          ->where('comentario',$comentario)
           ->delete();
       }else{
         Com::where('comentario_uuid',$uuid_comentario)
+            ->where('comentario',$comentario)
             ->where('autor_comentario_uuid',$autor)
             ->delete();
       }
@@ -90,6 +93,7 @@ class ComentariosController extends Controller
       $comentario_padre_uuid = $request->comentario_padre_uuid;
       $autor = Auth::user()->pluck('uuid')->first();
       //validacion
+      //dd($noticia,$comentario,$comentario_padre_uuid,$autor);
       $fecha = Carbon::now()->toDateString();
       DB::beginTransaction();
         Com::create([

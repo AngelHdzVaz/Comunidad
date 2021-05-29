@@ -36,10 +36,12 @@ class NoticiasController extends Controller
 
     $lista_noticias = Pub::with('autor_pub:uuid,primer_nombre,apellido_paterno')
       ->with('comments_pub')
+      ->with('respuestas_comments_pub')
       ->where('activa',true)
       ->where('fecha_publicacion','<=',$hoy)
       ->orderBy('fecha_publicacion','desc')
       ->get();
+      //dd($lista_noticias);
     $lista_noticias = $this->paginacion($lista_noticias->all(), $request,6);
     setlocale(LC_ALL, 'es');
 
@@ -50,10 +52,12 @@ class NoticiasController extends Controller
     $mes = $request->mes;
     $lista_noticias = Pub::with('autor_pub:uuid,primer_nombre,apellido_paterno')
       ->with('comments_pub')
+      ->with('respuestas_comments_pub')
       ->where('activa',true)
       ->whereMonth('fecha_publicacion','=',$mes)
       ->orderBy('fecha_publicacion','desc')
       ->get();
+    dd($lista_noticias);
     $lista_noticias = $this->paginacion($lista_noticias->all(), $request,6);
     $actual = null;
     $meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
@@ -81,6 +85,7 @@ class NoticiasController extends Controller
       $evento = $request->evento;
       $autor = Auth::user()->pluck('uuid')->first();
       //validacion
+      //dd($titulo,$fecha,$resumen,$descripcion,$activo,$evento,$autor);
       DB::beginTransaction();
         Pub::create([
            'titulo' => $titulo,
@@ -89,7 +94,7 @@ class NoticiasController extends Controller
            'cuerpo' => $descripcion,
            'autor' => $autor,
            'activa' => $activo,
-           'evento' => $evento
+           'evento' => $evento,
          ]);
        DB::commit();
 
@@ -113,9 +118,6 @@ class NoticiasController extends Controller
     return view('cumpleanios',compact('cumpleanios'));
   }
 
-  public function calendario(){
-    return view('calendario');
-  }
 
   public function eventos(){
     $hoy = Carbon::today()->toDateString();

@@ -25,7 +25,11 @@ class Publicacione extends Model
     }
 
     public function comments_pub(){
-      return $this->hasMany(Com::class,'id_noticia','id')->orderBy('fecha','desc');
+      return $this->hasMany(Com::class,'id_noticia','id')->whereNull('comentario_padre_uuid')->orderBy('created_at','asc');
+    }
+
+    public function respuestas_comments_pub(){
+      return $this->hasMany(Com::class,'id_noticia','id')->whereNotNull('comentario_padre_uuid')->orderBy('created_at','asc');
     }
 
 }

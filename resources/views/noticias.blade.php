@@ -38,12 +38,14 @@
       </h3>
         @foreach($lista_noticias as $noticia)
             <article class="blog-post"  id="{{ Carbon\Carbon::parse($noticia->fecha_publicacion)->format(' M ') }}">
+
               <h2 class="blog-post-title">{{ $noticia->titulo  }}</h2>
               <p class="blog-post-meta" >{{  Carbon\Carbon::parse(strtotime($noticia->fecha_publicacion))->formatLocalized('%d %B %Y')  }} publicado: <a href="#">{{ $noticia->autor_pub->primer_nombre." ".$noticia->autor_pub->apellido_paterno  }}</a></p>
               <p>{{ $noticia->resumen}}</p>
               <hr>
               <p>{{ $noticia->cuerpo}}</p>
-              <form name="comentario" method="get" action="{{ route('ComentarNoticia') }}">
+              <form  method="POST" action="{{ route('ComentarNoticia') }}">
+                @csrf
                 <input type="hidden" name="noticia" VALUE="{{$noticia->id}}">
                 <input type="hidden" name="autor" VALUE="{{$noticia->autor}}">
                 <div class="col-md-9">
@@ -55,47 +57,97 @@
                 <div class="p-2 col-md-12">
                 </div>
               </form>
-
-                  <div class="card p-3">
-                      @foreach($noticia->comments_pub as $comentario)
-                    <div class="d-flex justify-content-between align-items-center">
-                      <div class="user d-flex flex-row align-items-center">
-                         <img src="{{asset('images/comunity.jpg')}}" width="30" class="user-img rounded-circle mr-2">
-                          <span><small class="font-weight-bold text-primary">{{$comentario->autor->primer_nombre ." ".$comentario->autor->apellido_paterno}}</small>
-                         <small class="font-weight-bold">{{$comentario->comentario}}</small></span> </div>
-                         <small>{{Carbon\Carbon::parse(strtotime($comentario->created_at))->formatLocalized('%d de %B del %Y %H:%M:%S')}} </small>
-                    </div>
-                    <div class="action d-flex justify-content-between mt-2 align-items-center">
-                      <div class="reply px-4">
-                          <button class="dots col-md-4 btn" type="button" onclick="location.href='{{route('EliminarComentario',['uuid_comentario'=>$comentario->comentario_uuid,'autor'=>$comentario->autor_comentario_uuid,'respuesta'=>$comentario->respuesta])}}'">Eliminar</button>
-                          <button class="dots col-md-4 btn" type="button" data-toggle="collapse" data-target="#responder-{{$comentario->comentario_uuid}}" aria-expanded="false" aria-controls="responder">Responder</button>
-                          <div class="form-group collapse my-3 col-md-9" id="responder-{{$comentario->comentario_uuid}}">
-                          <form name="responder_comentario" method="get" action="{{ route('ResponderComentario') }}">
-                              <input type="hidden" name="noticia" VALUE="{{$noticia->id}}">
-                              <input type="hidden" name="comentario_padre_uuid" VALUE="{{$comentario->comentario_uuid}}">
-                              <div class="form-group collapse my-3 col-md-12" id="responder-{{$comentario->comentario_uuid}}">
-                                <input id="ipt_responder_comentario" type="text" class="form-control col-md-6" name="comentario_respuesta" value="{{ old('comentario_respuesta') }}" placeholder="Escribe tu comentario..." >
-                                <div class=col-md-2 >
-                                </div>
-                                <button type="submit" class="btn btn-primary col-md-4 ">Responder</button>
-                              </div>
-                            </form>
+              <div class="card p-3">
+                  @foreach($noticia->comments_pub as $comentario)
+                      <div class="d-flex justify-content-between align-items-center" >
+                        <div class="user d-flex flex-row align-items-center">
+                           <img src="{{asset('images/comunity.jpg')}}" width="30" class="user-img rounded-circle mr-2">
+                            <span><small class="font-weight-bold text-primary">{{$comentario->autor->primer_nombre ." ".$comentario->autor->apellido_paterno}}</small>
+                           <small class="font-weight-bold">{{$comentario->comentario}}</small></span> </div>
+                           <small>{{Carbon\Carbon::parse(strtotime($comentario->created_at))->formatLocalized('%d de %B del %Y %H:%M:%S')}} </small>
+                      </div>
+                      <div class="action d-flex justify-content-between mt-2 align-items-center">
+                        <div class="reply px-4">
+                          <form  method="POST" action="{{ route('EliminarComentario') }}">
+                            @csrf
+                            <input type="hidden" name="noticia" value="{{ $noticia->id }}">
+                            <input type="hidden" name="uuid_comentario" VALUE="{{ $comentario->comentario_uuid }}">
+                            <input type="hidden" name="autor" VALUE="{{ $comentario->autor_comentario_uuid }}">
+                            <input type="hidden" name="comentario" VALUE="{{ $comentario->comentario }}">
+                            <input type="hidden" name="respuesta" VALUE="{{ $comentario->comentario_padre_uuid }}">
+                            <button class="col-md-6 btn" type="submit">{{ __('Eliminar') }}</button>
+                          </form>
+                          <div class="col-md-4">
                           </div>
-                          <button class="dots col-md-4 btn" type="button" onclick="location.href='{{route('TraducirComentario',['uuid_comentario'=>$comentario->comentario_uuid,'autor'=>$comentario->autor_comentario_uuid,'respuesta'=>$comentario->respuesta])}}'">Traducir</button>
-                       </div>
-                             <div class="icons align-items-center"> <i class="fa fa-star text-warning"></i>
-                              <i class="fas fa-check"></i>
-                    </div>
-                  </div>
+                          <button class="col-md-6 btn" type="button" data-toggle="collapse" data-target="#responder-{{$comentario->comentario_uuid}}" aria-expanded="false" aria-controls="responder">Responder</button>
+                        </div>
+                        <form  method="POST" id="responder-{{$comentario->comentario_uuid}}" action="{{ route('ResponderComentario') }}">
+                          @csrf
+                          <input type="hidden" name="noticia" VALUE="{{$noticia->id}}">
+                          <input type="hidden" name="comentario_padre_uuid" VALUE="{{$comentario->comentario_uuid}}">
+                          <div class="form-group collapse my-3 col-md-12" id="responder-{{$comentario->comentario_uuid}}">
+                            <input id="ipt_responder_comentario" type="text" class="form-control col-md-6" name="comentario_respuesta" value="{{ old('comentario_respuesta') }}" placeholder="Escribe tu comentario..." >
+                            <div class=col-md-2 >
+                            </div>
+                            <button type="submit" class="col-md-4 btn">{{ __('Responder') }}</button>
+                          </div>
+                        </form>
+                         <div class="icons align-items-center"> <i class="fa fa-star text-warning"></i>
+                          <i class="fas fa-check"></i>
+                        </div>
+                      </div>
+                        @foreach($noticia->respuestas_comments_pub as $resp1)
+                          @if($resp1->comentario_padre_uuid == $comentario->comentario_uuid )
+                          <ul>
+                            <div class="d-flex justify-content-between align-items-center" >
+                              <div class="user d-flex flex-row align-items-center">
+                                 <img src="{{asset('images/comunity.jpg')}}" width="30" class="user-img rounded-circle mr-2">
+                                  <span><small class="font-weight-bold text-primary">{{$resp1->autor->primer_nombre ." ".$resp1->autor->apellido_paterno}}</small>
+                                 <small class="font-weight-bold">{{$resp1->comentario}}</small></span> </div>
+                                 <small>{{Carbon\Carbon::parse(strtotime($resp1->created_at))->formatLocalized('%d de %B del %Y %H:%M:%S')}} </small>
+                            </div>
+                            <div class="action d-flex justify-content-between mt-2 align-items-center">
+                              <div class="reply px-4">
+                                <form  method="POST" action="{{ route('EliminarComentario') }}">
+                                  @csrf
+                                  <input type="hidden" name="noticia" value="{{ $noticia->id }}">
+                                  <input type="hidden" name="uuid_comentario" VALUE="{{ $resp1->comentario_uuid }}">
+                                  <input type="hidden" name="autor" VALUE="{{ $resp1->autor_comentario_uuid }}">
+                                  <input type="hidden" name="comentario" VALUE="{{ $resp1->comentario }}">
+                                  <input type="hidden" name="respuesta" VALUE="{{ $resp1->comentario_padre_uuid }}">
+                                  <button class="col-md-6 btn" type="submit">{{ __('Eliminar') }}</button>
+                                </form>
+                                <div class="col-md-4">
+                                </div>
+                                <button class="col-md-6 btn" type="button" data-toggle="collapse" data-target="#responder2-{{$resp1->comentario_uuid}}" aria-expanded="false" aria-controls="responder">Responder</button>
+                              </div>
+                              <form  method="POST" id="responder2-{{$resp1->comentario_uuid}}" action="{{ route('ResponderComentario') }}">
+                                @csrf
+                                <input type="hidden" name="noticia" VALUE="{{$noticia->id}}">
+                                <input type="hidden" name="comentario_padre_uuid" VALUE="{{$resp1->comentario_uuid}}">
+                                <div class="form-group collapse my-3 col-md-12" id="responder2-{{$resp1->comentario_uuid}}">
+                                  <input id="ipt_responder_comentario" type="text" class="form-control col-md-6" name="comentario_respuesta" value="{{ old('comentario_respuesta') }}" placeholder="Escribe tu comentario..." >
+                                  <div class=col-md-2 >
+                                  </div>
+                                  <button type="submit" class="col-md-4 btn">{{ __('Responder') }}</button>
+                                </div>
+                              </form>
+                               <div class="icons align-items-center"> <i class="fa fa-star text-warning"></i>
+                                <i class="fas fa-check"></i>
+                              </div>
+                            </div>
+                            </ul>
+                            @endif
+                        @endforeach
                 @endforeach
             </article>
         @endforeach
-        <div class="p-3">
-          {{$lista_noticias->links()}}
-        </div>
-        <div class=p-3>
-        </div>
-      </div>
+            <div class="p-3">
+              {{$lista_noticias->links()}}
+            </div>
+            <div class=p-3>
+            </div>
+            </div>
 
     <div class="col-md-4">
       <div class="position-sticky" style="top: 2rem;">
@@ -110,7 +162,7 @@
           <h4 class="fst-italic">Publicaciones</h4>
           <ol class="list-unstyled mb-0">
             <li><a href="{{ route('VerNoticiasMes','01')}}">Enero 2021</a></li>
-            <li><a href="{{ route('VerNoticiasMes','02') }}">Febrero 2021</a></li>
+            <li><a href="{{ route('VerNoticiasMes','02')}}">Febrero 2021</a></li>
             <li><a href="{{ route('VerNoticiasMes','03')}}">Marzo 2021</a></li>
             <li><a href="{{ route('VerNoticiasMes','04')}}">Abril 2021</a></li>
             <li><a href="{{ route('VerNoticiasMes','05')}}">Mayo 2021</a></li>
@@ -128,7 +180,7 @@
           <h4 class="fst-italic">Otras Secciones</h4>
           <ol class="list-unstyled">
             <li><button class="btn" type="button" onclick= "location.href='{{ route('Cumpleanios')}}'"><i class="fas fa-birthday-cake"></i> Cumpleaños</button></li>
-            <li><button class="btn" type="button" onclick= "location.href='{{ route('Calendario')}}'"><i class="far fa-calendar-alt"></i> Calendario</button></li>
+            <li><button class="btn" type="button" onclick= "location.href='{{ route('Calendario')}}'"><i class="far fa-calendar"></i> Calendario</button></li>
             <li><button class="btn" type="button" onclick= "location.href='{{ route('Eventos')}}'"><i class="far fa-star"></i> Eventos</button></li>
           </ol>
         </div>
@@ -137,5 +189,6 @@
   </div>
   </body>
   </html>
+</div>
 </div>
 @endsection

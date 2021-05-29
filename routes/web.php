@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\NoticiasController;
 use App\Http\Controllers\ComentariosController;
+use App\Http\Controllers\CalendarioController;
+use App\Http\Controllers\ControllerEvent;
+
 use Illuminate\Support\Str;
 
 /*
@@ -38,25 +41,33 @@ Route::post('/rPreregistro',[UsuariosController::class, 'realizarPreRegistro'])-
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/verRegistroEmpleado',[UsuariosController::class, 'verRegistroEmpleado'])->name('VerRegistroEmpleado');
-Route::post('/RegistroEmpleado', [UsuariosController::class, 'registrarEmpleado'])->name('RegistrarEmpleado');
-Route::get('/listarEmpleado',[UsuariosController::class, 'listarEmpleado'])->name('ListarEmpleado');
-Route::get('/editarEmpleado',[UsuariosController::class, 'verEditorEmpleado'])->name('VerEditorEmpleado');
-Route::post('/editarEmpleado', [UsuariosController::class, 'editorEmpleado'])->name('EditorEmpleado');
+Route::get('/ver_registro_empleado',[UsuariosController::class, 'verRegistroEmpleado'])->name('VerRegistroEmpleado');
+Route::post('/registro_empleado', [UsuariosController::class, 'registrarEmpleado'])->name('RegistrarEmpleado');
+Route::get('/listar_empleado',[UsuariosController::class, 'listarEmpleado'])->name('ListarEmpleado');
+Route::get('/editar_empleado',[UsuariosController::class, 'verEditorEmpleado'])->name('VerEditorEmpleado');
+Route::post('/editar_empleado', [UsuariosController::class, 'editorEmpleado'])->name('EditorEmpleado');
 Route::get('/eliminarEmpleado',[UsuariosController::class,'eliminarEmpleado'])->name('EliminarEmpleado');
 
 
 Route::get('/noticias',[NoticiasController::class, 'verNoticias'])->name('VerNoticias');
-Route::get('/noticias/comentario',[ComentariosController::class,'comentarNoticia'])->name('ComentarNoticia');
-Route::get('noticias/eliminarComentario',[ComentariosController::class,'eliminarComentario'])->name('EliminarComentario');
-Route::get('noticias/responderComentario',[ComentariosController::class,'responderComentario'])->name('ResponderComentario');
-Route::get('noticias/traducirComentario',[ComentariosController::class,'traducirComentario'])->name('TraducirComentario');
-
 Route::get('/noticias/{mes}',[NoticiasController::class, 'verNoticiasMes'])->name('VerNoticiasMes');
 Route::get('/verRegistroNoticia',[NoticiasController::class, 'verRegistroNoticia'])->name('VerRegistroNoticia');
 Route::post('/registroNoticia',[NoticiasController::class,'registrarNoticia'])->name('RegistrarNoticia');
+Route::post('/noticias/comentar_noticia',[ComentariosController::class,'comentarNoticia'])->name('ComentarNoticia');
+Route::post('/noticias/eliminar_comentario',[ComentariosController::class,'eliminarComentario'])->name('EliminarComentario');
+Route::post('/noticias/responder_comentario',[ComentariosController::class,'responderComentario'])->name('ResponderComentario');
+Route::get('/noticias/traducir_comentario',[ComentariosController::class,'traducirComentario'])->name('TraducirComentario');
 
 
 Route::get('/cumpleanios',[NoticiasController::class,'cumpleanios'])->name('Cumpleanios');
-Route::get('/calendario',[NoticiasController::class,'calendario'])->name('Calendario');
 Route::get('/eventos',[NoticiasController::class,'eventos'])->name('Eventos');
+//Route::get('/calendario',[CalendarioController::class,'calendario'])->name('Calendario');
+Route::get('/calendario/registrar',[CalendarioController::class,'calendarioVerRegistro'])->name('CalendarioVerRegistro');
+
+Route::get('Evento/form',[ControllerEvent::class,'form']);
+Route::post('Evento/create',[ControllerEvent::class,'create']);
+Route::post('Evento/actualizar',[ControllerEvent::class,'actualizarEvento'])->name('ActualizarEvento');
+Route::get('Evento/details/{id}',[ControllerEvent::class,'details']);
+Route::get('Evento/index',[ControllerEvent::class,'index'])->name('Calendario');
+Route::get('Evento/index/{month}',[ControllerEvent::class,'index_month'])->name('CalendarioMes');
+Route::post('Evento/calendario',[ControllerEvent::class,'calendario']);

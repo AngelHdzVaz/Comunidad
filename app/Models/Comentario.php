@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use  App\Models\Empresas_empleado as EEmp;
 use App\Models\Publicacione as Pub;
-
+use App\Models\Comentario as Com;
 class Comentario extends Model
 {
     use HasFactory;
@@ -24,15 +24,11 @@ class Comentario extends Model
     }
 
     // returns post of any comment
-    public function publicacion()
-    {
+    public function publicacion(){
       return $this->belongsTo(Pub::class,'id', 'id_publicacion');
     }
 
-    public function comentario(){
-
+    public function respuesta(){
+      return $this->hasMany(Com::class,'comentario_padre_uuid');
     }
-
-
-
 }
