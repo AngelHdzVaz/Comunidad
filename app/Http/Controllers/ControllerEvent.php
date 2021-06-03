@@ -8,31 +8,31 @@ use App\Models\Event as Event;
 class ControllerEvent extends Controller
 {
     //
-    public function form(){
-      return view("form");
+    public function verCrearEvento(){
+      return view("crear_evento");
     }
 
-    public function create(Request $request){
+    public function crear(Request $request){
 
         $this->validate($request, [
         'titulo'     =>  'required',
         'descripcion'  =>  'required',
         'fecha' =>  'required'
        ]);
-
-        Event::insert([
+         DB::beginTransaction();
+        Event::create([
           'titulo'       => $request->input("titulo"),
           'descripcion'  => $request->input("descripcion"),
           'fecha'        => $request->input("fecha")
         ]);
-
+          DB::commit();
         return back()->with('success', 'Enviado exitosamente!');
 
       }
 
-    public function details($id){
+    public function detallesEvento($id){
         $event = Event::find($id);
-        return view("evento",["event" => $event
+        return view("calendario_evento",["event" => $event
       ]);
 
       }
@@ -42,7 +42,6 @@ class ControllerEvent extends Controller
         $titulo = $request->titulo;
         $descripcion = $request->descripcion;
         $fecha = $request->fecha;
-        dd($id,$titulo,$descripcion,$fecha);
         try{
           $this->validate($request, [
           $titulo     =>  'required',
@@ -75,12 +74,11 @@ class ControllerEvent extends Controller
 
     // =================== CALENDARIO =====================
 
-    public function index(){
+    public function actual(){
        $month = date("Y-m");
        $data = $this->calendar_month($month);
        $mes = $data['month'];
        $mespanish = $this->spanish_month($mes);
-       $mes = $data['month'];
        return view("calendario",[
          'data' => $data,
          'mes' => $mes,
@@ -89,13 +87,11 @@ class ControllerEvent extends Controller
 
    }
 
-    public function index_month($month){
-        $month = date("Y-m");
+    public function mesAnterior(Request $request){
+        $month = $request->month;
         $data = $this->calendar_month($month);
         $mes = $data['month'];
         $mespanish = $this->spanish_month($mes);
-        $mes = $data['month'];
-
         return view("calendario",[
           'data' => $data,
           'mes' => $mes,
@@ -103,8 +99,19 @@ class ControllerEvent extends Controller
         ]);
       }
 
-    public static function calendar_month($month){
+      public function mesSiguiente(Request $request){
+          $month = $request->month;
+          $data = $this->calendar_month($month);
+          $mes = $data['month'];
+          $mespanish = $this->spanish_month($mes);
+          return view("calendario",[
+            'data' => $data,
+            'mes' => $mes,
+            'mespanish' => $mespanish
+          ]);
+        }
 
+    public static function calendar_month($month){
         //$mes = date("Y-m");
         $mes = $month;
         //sacar el ultimo de dia del mes
@@ -125,9 +132,13 @@ class ControllerEvent extends Controller
         // numero de ultima semana del mes
         $semana2 = date("W",strtotime($daylast));
         // semana todal del mes
-        // en caso si es diciembre
-        if (date("m", strtotime($mes))==12) {
+        if (date("m", strtotime($mes))==1) {
+            $semana = 6;
+              // en caso si es diciembre
+        }else if (date("m", strtotime($mes))==12) {
             $semana = 5;
+        }else if (date("m", strtotime($mes))==8) {
+            $semana = 4;
         }
         else {
           $semana = ($semana2-$semana1)+1;
@@ -139,7 +150,7 @@ class ControllerEvent extends Controller
         while ($iweek < $semana):
             $iweek++;
             //echo "Semana $iweek <br>";
-            //
+
             $weekdata = [];
             for ($iday=0; $iday < 7 ; $iday++){
               // code...
@@ -152,16 +163,14 @@ class ControllerEvent extends Controller
 
               array_push($weekdata,$datanew);
             }
-            $dataweek['semana'] = $iweek;
+            $dataweek['semana'] = $iweek-1;
             $dataweek['datos'] = $weekdata;
-            //$datafecha['horario'] = $datahorario;
             array_push($calendario,$dataweek);
         endwhile;
         $nextmonth = date("Y-M",strtotime($mes."+ 1 month"));
         $lastmonth = date("Y-M",strtotime($mes."- 1 month"));
         $month = date("M",strtotime($mes));
         $yearmonth = date("Y",strtotime($mes));
-        //$month = date("M",strtotime("2019-03"));
         $data = array(
           'next' => $nextmonth,
           'month'=> $month,

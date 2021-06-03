@@ -30,6 +30,7 @@
     </style>
   </head>
   <body>
+    @csrf
     <div class="container">
       <div style="height:50px"></div>
       <div class="text-left">
@@ -37,20 +38,25 @@
       </div>
       <h3>Calendario - evento</h3>
 
-      <a class="btn btn-default"  href="{{ asset('/Evento/form') }}">Crear un evento</a>
+      <a class="btn btn-default"  href="{{ route('VerCrearEvento') }}">Crear un evento</a>
       <hr>
       <div class="row header-calendar"  >
-        <?php
+        <<?php
+        $mesAnt = $data['last'];
+        $mesSig = $data['next'];
+      //  dd($mesAnt);
+         ?>
+         <script>
+           var $mesAnt = '{{$data["last"]}}';
+           var $mesSig = '{{$data["next"]}}';
+         </script>
 
-        $data['last'] = date("M-Y", strtotime($data['last']));
-        //dd($data);
-          ?>
         <div class="col" style="display: flex; justify-content: space-between; padding: 10px;">
-          <a  href="{{ asset('/Evento/index/{month}') }}/<?= $data['last']; ?>" style="margin:10px;">
+          <a  href="{{ route('MesAnterior',['month'=>$mesAnt]) }}" style="margin:10px;">
             <i class="fas fa-chevron-circle-left" style="font-size:30px;color:white;"></i>
           </a>
           <h2 style="font-weight:bold;margin:10px;"><?= $mespanish; ?> <small><?= $data['year']; ?></small></h2>
-          <a  href="{{ asset('/Evento/index/{month}') }}/<?= $data['next']; ?>" style="margin:10px;">
+          <a  href="{{ route('MesSiguiente',['month'=>$mesSig]) }}/" style="margin:10px;">
             <i class="fas fa-chevron-circle-right" style="font-size:30px;color:white;"></i>
           </a>
         </div>
@@ -67,6 +73,7 @@
       <!-- inicio de semana -->
       @foreach ($data['calendar'] as $weekdata)
         <div class="row">
+        
           <!-- ciclo de dia por semana -->
           @foreach  ($weekdata['datos'] as $dayweek)
 
@@ -75,7 +82,7 @@
               {{ $dayweek['dia']  }}
               <!-- evento -->
               @foreach  ($dayweek['evento'] as $event)
-                  <a class="badge badge-primary" href="{{ asset('/Evento/details/') }}/{{ $event->id }}">
+                  <a class="badge badge-primary" href="{{ asset('Evento/detalles/{id}') }}/{{ $event->id }}">
                     {{ $event->titulo }}
                   </a>
               @endforeach

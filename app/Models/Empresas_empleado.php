@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Persona as Per;
 use App\Models\Personas_correo as PCor;
 use App\Models\Usuario as Usua;
+use App\Models\Usuarios_telefono as UTel;
 
 
 class Empresas_empleado extends Model
@@ -16,22 +17,16 @@ class Empresas_empleado extends Model
       'uuid',
       'codigo_empresa',
       'codigo_empleado',
-      'primer_nombre',
-      'segundo_nombre',
-      'apellido_paterno',
-      'apellido_materno',
       'estado_civil',
       'hijos',
       'genero',
       'lugar_nacimieto',
-      'fecha_nacimimiento',
       'edad',
       'rfc',
       'curp',
       'n_seguro_social',
       'id_nivel_estudios',
       'id_estatus_estudio',
-      'pais',
       'estado',
       'codigo_postal',
       'municipio',
@@ -39,11 +34,12 @@ class Empresas_empleado extends Model
       'manzana',
       'lote',
       'numero_exterior',
-      'numero interior'
+      'numero interior',
+      'tiempo_registro'
 ];
 
   public function persona_EEmp(){
-    return $this->hasOne(Per::class,'uuid','uuid');
+    return $this->hasOne(Per::class,'uuid','uuid')->orderBy('apellido_paterno');
   }
 
   public function correo_EEmp(){
@@ -55,14 +51,8 @@ class Empresas_empleado extends Model
     return $this->hasOne(Usua::class,'uuid','uuid');
   }
 
-  public function posts(){
-    return $this->hasMany('App\Posts', 'author_id');
+  public function telefonos_EEmp(){
+    return $this->hasMany(UTel::class,'uuid_usuario_telefono','uuid');
   }
-
-  // user has many comments
-  public function comments(){
-    return $this->hasMany('App\Comments', 'from_user');
-  }
-
 
 }

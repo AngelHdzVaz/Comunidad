@@ -86,36 +86,4 @@ class ComentariosController extends Controller
     }
   }
 
-  public function responderComentario(Request $request){
-    try{
-      $noticia = $request->noticia;
-      $comentario  = $request->comentario_respuesta;
-      $comentario_padre_uuid = $request->comentario_padre_uuid;
-      $autor = Auth::user()->pluck('uuid')->first();
-      //validacion
-      //dd($noticia,$comentario,$comentario_padre_uuid,$autor);
-      $fecha = Carbon::now()->toDateString();
-      DB::beginTransaction();
-        Com::create([
-           'id_noticia' => $noticia,
-           'comentario_uuid'=> (string) Str::uuid(),
-           'comentario_padre_uuid' => $comentario_padre_uuid,
-           'autor_comentario_uuid' => $autor,
-           'fecha' => date_format(date_create($fecha),'Y-m-d'),
-           'comentario' => $comentario,
-         ]);
-       DB::commit();
-
-       return redirect()->back()->with([
-         'titulo' => 'Actualización exitosa',
-         'mensaje' => 'Comentario Realizado',
-         'tipo' => 'success'
-       ]);
-
-
-    }catch(\Exception $e){
-      return $e->getMessage();
-    }
-  }
-
 }

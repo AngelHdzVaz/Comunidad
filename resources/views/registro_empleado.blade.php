@@ -21,6 +21,8 @@
                   <form method="POST" action="{{ route('RegistrarEmpleado') }}">
                   @csrf
 
+                  <input type="hidden" name="zona_horaria" id="ipt_zona_horaria">
+
                     <div class="form-group row ">
 
                       <label for="name" class="p-3 col-md-4 col-form-label text-md-center">{{ __('Primer Nombre') }} <span class="text-red">*</span></label>
@@ -63,9 +65,13 @@
                           <input id="ipt_correo_empresa" type="text" class="form-control " name="correo_empresa" value="{{ old('correo_empresa') }}"  >
                       </div>
 
-                      <label for="name" class="col-md-4 col-form-label text-md-center">Correo Personal<span class="text-red">*</span></label>
-                      <div class="p-2 col-md-6">
-                          <input id="ipt_correo_personal" type="text" class="form-control " name="correo_personal" value="{{ old('correo_personal') }}" >
+                      <label for="name" class="col-md-4 col-form-label text-md-center">Telefono<span class="text-red">*</span></label>
+                      <div class="p-2 col-md-3 ">
+                          <input id="ipt_telefono" type="tel" class="form-control " name="telefono" value="{{ old('telefono') }}" >
+                      </div>
+                      <label for="lada" class="col-md-2 col-form-label text-md-center">Ext :</label>
+                      <div class="p-2 col-md-2 ">
+                          <input id="ipt_extension" type="tel" class="form-control " name="extension" value="{{ old('extension') }}" >
                       </div>
 
                       <label for="name" class="col-md-4 col-form-label text-md-center">Contraseña<span class="text-red">*</span></label>
@@ -91,4 +97,13 @@
         </div>
     </div>
 </div>
+<script>
+  $(document).ready(function() {
+    let iptzonahoraria = document.getElementById('ipt_zona_horaria');
+    if(iptzonahoraria != null) {
+      iptzonahoraria.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    }
+  });
+</script>
+
 @endsection

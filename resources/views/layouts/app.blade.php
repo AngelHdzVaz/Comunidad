@@ -10,6 +10,7 @@
         <title>Comunidad</title>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/jquery.js') }}"></script>
     <script src="{{ asset('js/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('vendor/fontawesome-5.15.0/js/all.min.js') }}"></script>
     <!-- Fonts -->
@@ -17,7 +18,6 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <link href="{{ asset('vendor/fontawesome-5.15.0/css/all.min.css') }}" rel="stylesheet">
     @if(Route::currentRouteName() == 'welcome')
-      <script src="{{ asset('js/jquery.js') }}"></script>
       <script src="{{ asset('js/jquery.stellar.min.js') }}"></script>
       <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
       <script src="{{ asset('js/smoothscroll.js') }}"></script>
@@ -80,7 +80,7 @@
                                      @guest
                                          @if (Route::has('login'))
                                              <li class="nav-item">
-                                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Iniciar sesión') }}</a>
+                                                 <a class="nav-link" href="{{ route('VerLogin') }}">{{ __('Iniciar sesión') }}</a>
                                              </li>
                                          @endif
                                          @if (Route::has('register'))
@@ -124,7 +124,7 @@
             </a>
             @else
             <a href="{{ route('home') }}" class="navbar-brand smoothScroll">Home</a>
-            <a href="{{ route('ListarEmpleado') }}" class="navbar-brand smoothScroll">Empleados</a>
+            <a href="{{ route('ListarEmpleado') }}" class="navbar-brand smoothScroll">Directorio</a>
             <a href="{{ route('VerNoticias') }}" class="navbar-brand smoothScroll">Noticias</a>
             @endauth
 
@@ -146,7 +146,7 @@
                   @else
                       <li class="nav-item dropdown">
                           <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                              {{ Auth::user()->email }}
+                              // aqui nombre
                           </a>
                           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                               <a class="dropdown-item" href="{{ route('logout') }}"

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use  App\Models\Empresas_empleado as EEmp;
+use App\Models\Persona as Per;
 use App\Models\Comentario as Com;
 
 class Publicacione extends Model
@@ -21,15 +21,12 @@ class Publicacione extends Model
     ];
 
     public function autor_pub(){
-        return $this->belongsTo(EEmp::class,'autor','uuid');
+        return $this->belongsTo(Per::class,'autor','uuid');
     }
 
     public function comments_pub(){
-      return $this->hasMany(Com::class,'id_noticia','id')->whereNull('comentario_padre_uuid')->orderBy('created_at','asc');
+      return $this->hasMany(Com::class,'id_noticia','id')->orderBy('created_at','asc');
     }
 
-    public function respuestas_comments_pub(){
-      return $this->hasMany(Com::class,'id_noticia','id')->whereNotNull('comentario_padre_uuid')->orderBy('created_at','asc');
-    }
 
 }

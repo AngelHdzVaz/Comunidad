@@ -9,11 +9,16 @@ use Auth; //autentificacion
 use Log; //archivo log
 use Mail; //servicios de correo
 use Ctt;
+use Session;
+use App\Helpers\HoraZona;
+use App\Http\Dtos\UsuarioDatos;
 use App\Mail\PreregistroContactanos;
 use App\Models\Preregistro as PreR ;
 use App\Models\Empresas_empleado as EEmp;
 use App\Models\Persona as Per ;
 use App\Models\Usuario as Usua ;
+use App\Models\Usuarios_telefono as UTel ;
+use App\Models\Usuarios_role as URol ;
 use App\Models\Personas_correo as PCor ;
 use App\Models\Publicacione as Pubc;
 use Carbon\Carbon;
@@ -31,11 +36,14 @@ class UsuariosController extends Controller
         ['path' => $request->url(), 'query' => $request->query()]);
   }
 
+  public function verLogin(){
+    return view('auth.login');
+  }
   public function loginUsuario(Request $request){
     try {
       $email = $request->email;
       $password = $request->password;
-      Log::debug('1');
+
       if(!$email){
         return redirect()->back()->with([
           'titulo' => 'Verifica el campo correo',
@@ -43,7 +51,7 @@ class UsuariosController extends Controller
           'tipo' => 'error'
         ]);
         }
-          Log::debug('2');
+
       if(!$password){
         return redirect()->back()->with([
           'titulo' => 'Verifica el campo contraseña',
@@ -51,25 +59,27 @@ class UsuariosController extends Controller
           'tipo' => 'error'
         ]);
         }
-          Log::debug('3');
+
         $credencial = ['email' => $email, 'password' => $password];
         $remember = 'on';
 
         if(Auth::attempt($credencial)) {
-            Log::debug('3.1');
-          return redirect()->route('Home');
+          $usuario_dto = UsuarioDatos::instancia();
+          Session::put('usuario_dto', $usuario_dto);
+
+          return redirect()->route('home');
         } else {
-            Log::debug('3.2');
+
           return redirect()->back()->with([
             'titulo' => 'Verifica los datos de inicio de sesión',
             'mensaje' => ' ',
             'tipo' => 'error'
           ]);
         }
-          Log::debug('4');
+          Log::error('4');
 
     } catch (\Exception $e) {
-      Log::debug('UsuariosController@loginUsuario'.$e->getMessage());
+      Log::error('UsuariosController@loginUsuario'.$e->getMessage());
       return null;
       //return view('errorInterno'); hacer vista
     }
@@ -86,10 +96,10 @@ class UsuariosController extends Controller
       $telefono = $request->telefono;
       $extension = $request->extension;
       $mensaje = $request->mensaje;
-      Log::debug('1');
+      Log::error('1');
 
       $existecorreo = PreR::select('id')->where('correo',$correo)->first();
-        Log::debug('2');
+        Log::error('2');
       if($existecorreo!=null){
         return redirect()->back()->with([
           'titulo' => 'Correo no aceptado',
@@ -113,7 +123,7 @@ class UsuariosController extends Controller
             'tipo' => 'error'
           ]);
         }
-          Log::debug('3');
+          Log::error('3');
       DB::beginTransaction();
       PreR::create([
         'nombre' => $nombre,
@@ -126,7 +136,7 @@ class UsuariosController extends Controller
       Mail::to(Ctt::Correosoporte)->send(new PreregistroContactanos(
         $nombre, $correo, $mensaje, $telefono,$extension
       ));
-        Log::debug('4');
+        Log::error('4');
       return redirect()->back()->with([
         'titulo' => 'Todo listo',
         'mensaje' => 'Nos pondremos en contacto lo más pronto posible',
@@ -144,6 +154,10 @@ class UsuariosController extends Controller
 
   public function registrarEmpleado(Request $request){
     try {
+      $usuario_dto = Session::get('usuario_dto');
+      $tiempo_obj = new HoraZona($usuario_dto->zonaHoraria());
+      dd($tiempo_obj);
+      $tiempo_local = $tiempo_obj->fechaYHora();
       $primer_nombre = $request->primer_nombre;
       $segundo_nombre = $request->segundo_nombre;
       $apellido_paterno = $request->apellido_paterno;
@@ -152,9 +166,11 @@ class UsuariosController extends Controller
       $curp = $request->curp;
       $numero_seguro_social = $request->numero_seguro_social;
       $correo_empresa = $request->correo_empresa;
-      $correo_personal =$request->correo_personal;
+      $telefono = $request->telefono;
+      $extension = $request->extension;
       $contrasenia =$request->contrasenia;
-
+      $zona_horaria = $request->zona_horaria;
+      //dd($telefono,$extension);
         //validacion
         if($primer_nombre){
           if (!ctype_alpha($primer_nombre)) {
@@ -279,36 +295,11 @@ class UsuariosController extends Controller
             ]);
           }
 
-        if($correo_personal){
-          if (!filter_var($correo_personal, FILTER_VALIDATE_EMAIL)) {
-            return redirect()->back()->withInput()->with([
-              'titulo' => 'Verifica el campo Correo Personal',
-              'mensaje' => 'El valor que ingresaste no es válido',
-              'tipo' => 'error'
-              ]);
-            }
-          }else{
-            return redirect()->back()->withInput()->with([
-              'titulo' => 'Verifica el campo Correo Personal',
-              'mensaje' => 'El valor esta vacío',
-              'tipo' => 'error'
-            ]);
-        }
-
         $correo_empresa_existe = PCor::select('id')->where('email_empresa',$correo_empresa)->first();
         if($correo_empresa_existe!=null){
           return redirect()->back()->withInput()->with([
             'titulo' => 'Correo no aceptado',
             'mensaje' => 'El correo empresarial ya ha sido registrado',
-            'tipo' => 'error'
-          ]);
-          }
-
-        $correo_personal_existe = PCor::select('id')->where('email_personal',$correo_personal)->first();
-        if($correo_personal_existe!=null){
-          return redirect()->back()->withInput()->with([
-            'titulo' => 'Correo no aceptado',
-            'mensaje' => 'El correo personal ya ha sido registrado',
             'tipo' => 'error'
           ]);
           }
@@ -331,44 +322,80 @@ class UsuariosController extends Controller
           ]);
           }
 
+          if(!is_numeric($telefono)&&strlen($telefono=10)){
+            return redirect()->back()->withInput()->with([
+              'titulo' => 'Telefono Invalido',
+              'mensaje' => 'El telefono ingresado no es correcto',
+              'tipo' => 'error'
+            ]);
+          }
+
+          if(!$extension && is_numeric($extension)){
+            return redirect()->back()->withInput()->with([
+              'titulo' => 'Extensión',
+              'mensaje' => 'Extensión no valida',
+              'tipo' => 'error'
+            ]);
+            }
+
+          if($zona_horaria==null){
+          Log::error('UsuariosController@registroColaborador => Variable zona_horaria con valor nulo');
+            return redirect()->back()->with([
+              'titulo' => 'Ha ocurrido un error',
+              'mensaje' => 'Intenta nuevamente mas tarde',
+              'tipo' => 'error'
+            ]);
+          }
+
         DB::beginTransaction();
-       EEmp::create([
+       $var1 = EEmp::create([
           //colocar uuid? para conectar todas tablas y vistas??
           'uuid' => (string) Str::uuid(),
-          'primer_nombre' => $primer_nombre,
-          'segundo_nombre' => $segundo_nombre,
-          'apellido_paterno' => $apellido_paterno,
-          'apellido_materno' => $apellido_materno,
           'rfc' => $rfc,
           'curp' => $curp,
-          'n_seguro_social' => $numero_seguro_social
-        ]);
-        $uuid_nuevo = EEmp::select('uuid')->where('rfc',$rfc)->pluck('uuid')->first();
-        Usua::create([
-          'uuid' => $uuid_nuevo,
-          'email' => $correo_empresa,
-          'password' => Hash::make($contrasenia)
+          'n_seguro_social' => $numero_seguro_social,
+          'tiempo_registro' => $tiempo_local
         ]);
 
-        $uuid_nuevo = Usua::select('uuid')->where('email',$correo_empresa)->pluck('uuid')->first();
-        Per::create([
-          'uuid' => $uuid_nuevo,
+        Usua::create([
+          'uuid' => $var1->uuid,
+          'email' => $correo_empresa,
+          'password' => Hash::make($contrasenia),
+          'zona_horaria' => $zona_horaria,
+          'tiempo_registro' => $tiempo_local
+        ]);
+
+        URol::create([
+          'uuid_usuario_rol' => $var1->uuid,
+          'id_rol' => 10
+        ]);
+
+        UTel::create([
+          'uuid_usuario_telefono' => $var1->uuid,
+          'numero' => $telefono,
+          'extension' => $extension,
+          'id_tipo' => 3
+        ]);
+
+
+        $var2 = Per::create([
+          'uuid' => $var1->uuid,
           'primer_nombre' => $primer_nombre,
           'segundo_nombre' => $segundo_nombre,
           'apellido_paterno' => $apellido_paterno,
           'apellido_materno' => $apellido_materno
         ]);
 
-        $uuid_nuevo = Usua::select('uuid')->where('email',$correo_empresa)->pluck('uuid')->first();
-        $id_persona = Per::select('id')->where('uuid',$uuid_nuevo)->pluck('id')->first();
 
         PCor::create([
-            'uuid' => $uuid_nuevo,
-            'id_persona' => $id_persona,
-            'email_empresa' => $correo_empresa,
-            'email_personal' => $correo_personal
+            'uuid' => $var1->uuid,
+            'id_persona' => $var2->id_persona,
+            'email_empresa' => $correo_empresa
         ]);
 
+/*        $var1->id_estatus = 8;
+        $var1->save();
+*/
         DB::commit();
 
         return redirect()->back()->with([
@@ -386,15 +413,46 @@ class UsuariosController extends Controller
   public function listarEmpleado(Request $request){
     if(Auth::check()){
       $empleados = EEmp::with('correo_EEmp')
-      ->orderBy('apellido_paterno')
       ->with('usuario_EEmp')
       ->with('persona_EEmp')
+      ->with(['telefonos_EEmp' =>function($q1){
+          $q1->with('catalogoTelefonos_UTel');
+      }])
+      ->orderBy('edad','asc')
       ->get();
+          //dd($empleados);
       $empleados = $this->paginacion($empleados->all(), $request,4);
       setlocale(LC_ALL, 'es');
+
       return view('listar_empleado',compact('empleados'));
     }else{
-      Log::debug('UsuariosController@listarEmpleado no se esta logueado');
+      Log::error('UsuariosController@listarEmpleado no se esta logueado');
+      return redirect()->back()->with([
+        'titulo' => 'Ha ocurrido un error',
+        'mensaje' => 'Intenta nuevamente mas tarde',
+        'tipo' => 'error'
+      ]);
+    }
+  }
+
+
+  public function directorio(Request $request){
+    if(Auth::check()){
+      $empleados = EEmp::with('correo_EEmp')
+      ->with('usuario_EEmp')
+      ->with('persona_EEmp')
+      ->with(['telefonos_EEmp' =>function($q1){
+          $q1->with('catalogoTelefonos_UTel');
+      }])
+      ->orderBy('edad','asc')
+      ->get();
+          //dd($empleados);
+      $empleados = $this->paginacion($empleados->all(), $request,4);
+      setlocale(LC_ALL, 'es');
+
+      return view('directorio',compact('empleados'));
+    }else{
+      Log::error('UsuariosController@listarEmpleado no se esta logueado');
       return redirect()->back()->with([
         'titulo' => 'Ha ocurrido un error',
         'mensaje' => 'Intenta nuevamente mas tarde',
@@ -406,32 +464,40 @@ class UsuariosController extends Controller
   public function verEditorEmpleado(Request $request){
     try {
       $uuid = $request->uuid;
-      Log::debug('1');
       if(!$uuid) {
-        Log::debug('UsuariosController@editorColaborador no se recibio empleo');
         return redirect()->back()->with([
           'titulo' => 'Ha ocurrido un error',
           'mensaje' => 'Intenta nuevamente mas tarde',
           'tipo' => 'error'
         ]);}
-        Log::debug('2');
-          $existe = EEmp::select('uuid')->where('uuid', $uuid)->pluck('uuid')->first();
-          Log::debug('3');
+          $existe = EEmp::select('uuid')
+            ->where('uuid', $uuid)
+            ->pluck('uuid')
+            ->first();
           if(!$existe){
-            Log::debug('UsuariosController@editorColaborador el correo no se encuentra en la Base de Datos');
+            Log::error('UsuariosController@editorColaborador el Colaborador no se encuentra en la Base de Datos');
             return redirect()->back()->with([
               'titulo' => 'Ha ocurrido un error',
               'mensaje' => 'Intenta nuevamente mas tarde',
               'tipo' => 'error'
             ]);
             }
-            Log::debug('4');
-            $empleado_datos = EEmp::with('persona_EEmp')->with('correo_EEmp')->with('usuario_EEmp')->where('uuid',$uuid)->first();
-            Log::debug('5');
+            $empleado_datos = EEmp::with('persona_EEmp')
+            ->with('correo_EEmp')
+            ->with('usuario_EEmp')
+            ->with(['telefonos_EEmp' =>function($q1){
+                $q1->with('catalogoTelefonos_UTel');
+            }])
+            ->where('uuid',$uuid)
+            ->first();
             return view('editor_empleado', compact('empleado_datos'));
     } catch (\Exception $e) {
-      Log::debug('UsuariosController@editorColaborador'.$e->getMessage());
-      return null;
+      Log::error('UsuariosController@editorColaborador'.$e->getMessage());
+      return redirect()->back()->with([
+        'titulo' => 'Ha ocurrido un error',
+        'mensaje' => 'Intenta nuevamente mas tarde',
+        'tipo' => 'error'
+      ]);
     }
   }
 
@@ -463,7 +529,14 @@ class UsuariosController extends Controller
       $codigo_postal = $request->codigo_postal;
       $correo_empresa = $request ->correo_empresa;
       $correo_personal =$request ->correo_personal;
-
+      $telefono_empresa = $request->telefono_empresa;
+      $extension_empresa = $request->extension_empresa;
+      $telefono_personal = $request->telefono_personal;
+      $extension_personal = $request->extension_personal;
+      $telefonos_base = UTel::where('uuid_usuario_telefono',$uuid)->get();
+      $telefono_empresa_base =   $telefonos_base->pluck('numero')->get(0);
+      $telefono_personal_base = $telefonos_base->pluck('numero')->get(1);
+      //dd($telefono_empresa_base,$telefono_empresa,$telefono_personal_base,$telefono_personal);
       //validacion
       if($primer_nombre){
         if (!ctype_alpha($primer_nombre)) {
@@ -516,7 +589,6 @@ class UsuariosController extends Controller
           ]);
         }
       }
-
 
       if($rfc){
         if (strlen ($rfc)>13){
@@ -597,113 +669,153 @@ class UsuariosController extends Controller
             'tipo' => 'error'
             ]);
           }
-        }else{
-          return redirect()->back()->with([
-            'titulo' => 'Verifica el campo Correo Personal',
-            'mensaje' => 'El valor esta vacío',
+        }
+        if(!is_numeric($telefono_empresa)&&strlen($telefono_empresa==10)){
+          return redirect()->back()->withInput()->with([
+            'titulo' => 'Telefono Invalido',
+            'mensaje' => 'El telefono ingresado no es correcto',
             'tipo' => 'error'
           ]);
-      }
+        }
+
+        if(!$extension_empresa && is_numeric($extension_empresa)){
+          return redirect()->back()->withInput()->with([
+            'titulo' => 'Extensión',
+            'mensaje' => 'Extensión no valida',
+            'tipo' => 'error'
+          ]);
+          }
+          if(!is_numeric($telefono_personal)&&strlen($telefono_personal==10)){
+            return redirect()->back()->withInput()->with([
+              'titulo' => 'Telefono Invalido',
+              'mensaje' => 'El telefono ingresado no es correcto',
+              'tipo' => 'error'
+            ]);
+          }
+
+          if(!$extension_personal && is_numeric($extension_personal)){
+            return redirect()->back()->withInput()->with([
+              'titulo' => 'Extensión',
+              'mensaje' => 'Extensión no valida',
+              'tipo' => 'error'
+            ]);
+            }
+
       $correo_empresa_uuid = PCor::select('email_empresa')->where('uuid',$uuid)->pluck('email_empresa')->first();
       $correo_empresa_lista =PCor::select('id')->where('email_empresa',$correo_empresa)->first();
 
       if($correo_empresa_uuid==$correo_empresa){
 
-      }else{
-        if($correo_empresa_lista!=null){
-          return redirect()->back()->with([
-            'titulo' => 'Correo no aceptado',
-            'mensaje' => 'El correo empresarial ya ha sido registrado',
-            'tipo' => 'error'
-          ]);
-          }
-      }
-
+        }else{
+          if($correo_empresa_lista!=null){
+            return redirect()->back()->with([
+              'titulo' => 'Correo no aceptado',
+              'mensaje' => 'El correo empresarial ya ha sido registrado',
+              'tipo' => 'error'
+            ]);
+            }
+        }
 
       $correo_personal_uuid = PCor::select('email_personal')->where('uuid',$uuid)->pluck('email_personal')->first();
       $correo_personal_lista =PCor::select('id')->where('email_personal',$correo_personal)->first();
+
       if($correo_personal_uuid==$correo_personal){
-
-      }else{
-        if($correo_personal_lista!=null){
-          return redirect()->back()->with([
-            'titulo' => 'Correo no aceptado',
-            'mensaje' => 'El correo personal ya ha sido registrado',
-            'tipo' => 'error'
-          ]);
-          }
-      }
-
-
+        }else{
+          if($correo_personal_lista!=null){
+            return redirect()->back()->with([
+              'titulo' => 'Correo no aceptado',
+              'mensaje' => 'El correo personal ya ha sido registrado',
+              'tipo' => 'error'
+            ]);
+            }
+        }
 
       $rfc_uuid = EEmp::select('rfc')->where('uuid',$uuid)->pluck('rfc')->first();
       $rfc_lista = EEmp::select('id')->where('rfc',$rfc)->first();
       if($rfc_uuid==$rfc){
-
-      }else{
-        if($rfc_lista!=null){
-          return redirect()->back()->with([
-            'titulo' => 'RFC no aceptado',
-            'mensaje' => 'RFC ya registrado',
-            'tipo' => 'error'
-          ]);
+        }else{
+          if($rfc_lista!=null){
+            return redirect()->back()->with([
+              'titulo' => 'RFC no aceptado',
+              'mensaje' => 'RFC ya registrado',
+              'tipo' => 'error'
+            ]);
           }
-      }
-
+        }
 
       $numero_seguro_social_uuid = EEmp::select('n_seguro_social')->where('uuid',$uuid)->pluck('n_seguro_social')->first();
       $numero_seguro_social_lista = EEmp::select('id')->where('n_seguro_social',$numero_seguro_social)->first();
       if($numero_seguro_social_uuid==$numero_seguro_social){
-
-      }else{
-        if($numero_seguro_social_lista!=null){
-          return redirect()->back()->with([
-            'titulo' => 'Numero de Seguro Social',
-            'mensaje' => 'Ya se encuentra registrado',
-            'tipo' => 'error'
-          ]);
-          }
-      }
+        }else{
+          if($numero_seguro_social_lista!=null){
+            return redirect()->back()->with([
+              'titulo' => 'Numero de Seguro Social',
+              'mensaje' => 'Ya se encuentra registrado',
+              'tipo' => 'error'
+            ]);
+            }
+        }
 
       DB::beginTransaction();
 
-     EEmp::where('uuid',$uuid)->update([
-        'primer_nombre' => $primer_nombre,
-        'segundo_nombre' => $segundo_nombre,
-        'apellido_paterno' => $apellido_paterno,
-        'apellido_materno' => $apellido_materno,
-        'estado_civil' => $estado_civil,
-        'hijos' => $hijos,
-        'genero' =>$genero,
-        'lugar_nacimiento' =>$lugar_nacimiento,
-        'fecha_nacimiento' => date_format(date_create($fecha_nacimiento),'Y-m-d'),
-        'edad' =>$edad,
-        'rfc' => $rfc,
-        'curp' => $curp,
-        'n_seguro_social' => $numero_seguro_social,
-        'pais' => $pais,
-        'estado' =>$estado,
-        'codigo_postal' =>$codigo_postal,
-        'municipio' =>$municipio,
-        'colonia' =>$colonia,
-        'manzana' =>$manzana,
-        'lote' =>$lote,
-        'calle' =>$calle,
-        'numero_exterior' =>$num_exterior,
-        'numero_interior' =>$num_interior
-      ]);
+       EEmp::where('uuid',$uuid)->update([
+          'estado_civil' => $estado_civil,
+          'hijos' => $hijos,
+          'genero' =>$genero,
+          'lugar_nacimiento' =>$lugar_nacimiento,
+          'edad' =>$edad,
+          'rfc' => $rfc,
+          'curp' => $curp,
+          'n_seguro_social' => $numero_seguro_social,
+          'estado' =>$estado,
+          'codigo_postal' =>$codigo_postal,
+          'municipio' =>$municipio,
+          'colonia' =>$colonia,
+          'manzana' =>$manzana,
+          'lote' =>$lote,
+          'calle' =>$calle,
+          'numero_exterior' =>$num_exterior,
+          'numero_interior' =>$num_interior
+        ]);
 
-      Usua::where('uuid',$uuid)->update([
-        'email' => $correo_empresa,
-      ]);
+        Usua::where('uuid',$uuid)->update([
+          'email' => $correo_empresa,
+        ]);
 
+        UTel::where('uuid_usuario_telefono', $uuid)
+          ->where('numero', $telefono_empresa_base)
+          ->update([
+            'numero' => $telefono_empresa,
+            'extension' => $extension_empresa ,
+            'id_tipo' => 3
+          ]);
+        Log::debug(1);
+        if($telefono_personal_base){
+          UTel::where([['uuid_usuario_telefono',$uuid],['numero',$telefono_personal_base]])
+          ->update([
+            'uuid_usuario_telefono'=> $uuid,
+            'numero' => $telefono_personal,
+            'extension' => $extension_personal ,
+            'id_tipo' => 2
+          ]);
 
+          Log::debug(2);
+        }else{
+          UTel::create([
+            'uuid_usuario_telefono'=> $uuid,
+            'numero' => $telefono_personal,
+            'extension' => $extension_personal ,
+            'id_tipo' => 2
+          ]);
+        }
+
+        Log::debug(3);
       Per::where('uuid',$uuid)->update([
         'primer_nombre' => $primer_nombre,
         'segundo_nombre' => $segundo_nombre,
         'apellido_paterno' => $apellido_paterno,
         'apellido_materno' => $apellido_materno,
-        'fecha_nacimiento' => $fecha_nacimiento,
+        'fecha_nacimiento' => date_format(date_create($fecha_nacimiento),'Y-m-d'),
         'genero' => $genero,
         'pais' =>$pais
       ]);
@@ -715,8 +827,10 @@ class UsuariosController extends Controller
           'email_personal' => $correo_personal
       ]);
 
+      Log::debug(4);
       DB::commit();
 
+      Log::debug(5);
       return redirect()->back()->with([
         'titulo' => 'Actualización exitosa',
         'mensaje' => '',

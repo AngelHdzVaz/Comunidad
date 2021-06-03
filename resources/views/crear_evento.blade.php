@@ -34,7 +34,7 @@
 
     <div class="container">
       <h3>Evento</h3>
-      <a class="btn btn-default"  href="{{ asset('/Evento/index') }}">Atras</a>
+      <a class="btn btn-default"  href="{{ route('Calendario') }}">Atras</a>
       <hr>
       @if (count($errors) > 0)
         <div class="alert alert-danger">
@@ -54,7 +54,7 @@
        @endif
 
       <div class="col-md-6">
-        <form action="{{ asset('/Evento/create/') }}" method="post">
+        <form action="{{ route('CrearEvento') }}" method="post">
           @csrf
           <div class="fomr-group">
             <label>Titulo</label>

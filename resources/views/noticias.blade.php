@@ -74,71 +74,14 @@
                             <input type="hidden" name="uuid_comentario" VALUE="{{ $comentario->comentario_uuid }}">
                             <input type="hidden" name="autor" VALUE="{{ $comentario->autor_comentario_uuid }}">
                             <input type="hidden" name="comentario" VALUE="{{ $comentario->comentario }}">
-                            <input type="hidden" name="respuesta" VALUE="{{ $comentario->comentario_padre_uuid }}">
                             <button class="col-md-6 btn" type="submit">{{ __('Eliminar') }}</button>
                           </form>
-                          <div class="col-md-4">
-                          </div>
-                          <button class="col-md-6 btn" type="button" data-toggle="collapse" data-target="#responder-{{$comentario->comentario_uuid}}" aria-expanded="false" aria-controls="responder">Responder</button>
                         </div>
-                        <form  method="POST" id="responder-{{$comentario->comentario_uuid}}" action="{{ route('ResponderComentario') }}">
-                          @csrf
-                          <input type="hidden" name="noticia" VALUE="{{$noticia->id}}">
-                          <input type="hidden" name="comentario_padre_uuid" VALUE="{{$comentario->comentario_uuid}}">
-                          <div class="form-group collapse my-3 col-md-12" id="responder-{{$comentario->comentario_uuid}}">
-                            <input id="ipt_responder_comentario" type="text" class="form-control col-md-6" name="comentario_respuesta" value="{{ old('comentario_respuesta') }}" placeholder="Escribe tu comentario..." >
-                            <div class=col-md-2 >
-                            </div>
-                            <button type="submit" class="col-md-4 btn">{{ __('Responder') }}</button>
-                          </div>
-                        </form>
                          <div class="icons align-items-center"> <i class="fa fa-star text-warning"></i>
                           <i class="fas fa-check"></i>
                         </div>
                       </div>
-                        @foreach($noticia->respuestas_comments_pub as $resp1)
-                          @if($resp1->comentario_padre_uuid == $comentario->comentario_uuid )
-                          <ul>
-                            <div class="d-flex justify-content-between align-items-center" >
-                              <div class="user d-flex flex-row align-items-center">
-                                 <img src="{{asset('images/comunity.jpg')}}" width="30" class="user-img rounded-circle mr-2">
-                                  <span><small class="font-weight-bold text-primary">{{$resp1->autor->primer_nombre ." ".$resp1->autor->apellido_paterno}}</small>
-                                 <small class="font-weight-bold">{{$resp1->comentario}}</small></span> </div>
-                                 <small>{{Carbon\Carbon::parse(strtotime($resp1->created_at))->formatLocalized('%d de %B del %Y %H:%M:%S')}} </small>
-                            </div>
-                            <div class="action d-flex justify-content-between mt-2 align-items-center">
-                              <div class="reply px-4">
-                                <form  method="POST" action="{{ route('EliminarComentario') }}">
-                                  @csrf
-                                  <input type="hidden" name="noticia" value="{{ $noticia->id }}">
-                                  <input type="hidden" name="uuid_comentario" VALUE="{{ $resp1->comentario_uuid }}">
-                                  <input type="hidden" name="autor" VALUE="{{ $resp1->autor_comentario_uuid }}">
-                                  <input type="hidden" name="comentario" VALUE="{{ $resp1->comentario }}">
-                                  <input type="hidden" name="respuesta" VALUE="{{ $resp1->comentario_padre_uuid }}">
-                                  <button class="col-md-6 btn" type="submit">{{ __('Eliminar') }}</button>
-                                </form>
-                                <div class="col-md-4">
-                                </div>
-                                <button class="col-md-6 btn" type="button" data-toggle="collapse" data-target="#responder2-{{$resp1->comentario_uuid}}" aria-expanded="false" aria-controls="responder">Responder</button>
-                              </div>
-                              <form  method="POST" id="responder2-{{$resp1->comentario_uuid}}" action="{{ route('ResponderComentario') }}">
-                                @csrf
-                                <input type="hidden" name="noticia" VALUE="{{$noticia->id}}">
-                                <input type="hidden" name="comentario_padre_uuid" VALUE="{{$resp1->comentario_uuid}}">
-                                <div class="form-group collapse my-3 col-md-12" id="responder2-{{$resp1->comentario_uuid}}">
-                                  <input id="ipt_responder_comentario" type="text" class="form-control col-md-6" name="comentario_respuesta" value="{{ old('comentario_respuesta') }}" placeholder="Escribe tu comentario..." >
-                                  <div class=col-md-2 >
-                                  </div>
-                                  <button type="submit" class="col-md-4 btn">{{ __('Responder') }}</button>
-                                </div>
-                              </form>
-                               <div class="icons align-items-center"> <i class="fa fa-star text-warning"></i>
-                                <i class="fas fa-check"></i>
-                              </div>
-                            </div>
-                            </ul>
-                            @endif
-                        @endforeach
+
                 @endforeach
             </article>
         @endforeach

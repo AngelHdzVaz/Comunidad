@@ -34,7 +34,8 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-
+Route::get('/inicio_sesion',[UsuariosController::class, 'verLogin'])->name('VerLogin');
+Route::post('/iniciar_sesion',[UsuariosController::class, 'loginUsuario'])->name('LoginUsuario');
 
 Route::get('/verPreregistro',[UsuariosController::class, 'verPreregistro'])->name('VerPreregistro');
 Route::post('/rPreregistro',[UsuariosController::class, 'realizarPreRegistro'])->name('RealizarPreRegistro');
@@ -48,6 +49,9 @@ Route::get('/editar_empleado',[UsuariosController::class, 'verEditorEmpleado'])-
 Route::post('/editar_empleado', [UsuariosController::class, 'editorEmpleado'])->name('EditorEmpleado');
 Route::get('/eliminarEmpleado',[UsuariosController::class,'eliminarEmpleado'])->name('EliminarEmpleado');
 
+//pruebas de rutas
+Route::get('/corporativo/directorio',[UsuariosController::class, 'directorio'])->name('Directorio');
+
 
 Route::get('/noticias',[NoticiasController::class, 'verNoticias'])->name('VerNoticias');
 Route::get('/noticias/{mes}',[NoticiasController::class, 'verNoticiasMes'])->name('VerNoticiasMes');
@@ -55,8 +59,6 @@ Route::get('/verRegistroNoticia',[NoticiasController::class, 'verRegistroNoticia
 Route::post('/registroNoticia',[NoticiasController::class,'registrarNoticia'])->name('RegistrarNoticia');
 Route::post('/noticias/comentar_noticia',[ComentariosController::class,'comentarNoticia'])->name('ComentarNoticia');
 Route::post('/noticias/eliminar_comentario',[ComentariosController::class,'eliminarComentario'])->name('EliminarComentario');
-Route::post('/noticias/responder_comentario',[ComentariosController::class,'responderComentario'])->name('ResponderComentario');
-Route::get('/noticias/traducir_comentario',[ComentariosController::class,'traducirComentario'])->name('TraducirComentario');
 
 
 Route::get('/cumpleanios',[NoticiasController::class,'cumpleanios'])->name('Cumpleanios');
@@ -64,10 +66,11 @@ Route::get('/eventos',[NoticiasController::class,'eventos'])->name('Eventos');
 //Route::get('/calendario',[CalendarioController::class,'calendario'])->name('Calendario');
 Route::get('/calendario/registrar',[CalendarioController::class,'calendarioVerRegistro'])->name('CalendarioVerRegistro');
 
-Route::get('Evento/form',[ControllerEvent::class,'form']);
-Route::post('Evento/create',[ControllerEvent::class,'create']);
+Route::get('Evento/ver_crear_evento',[ControllerEvent::class,'verCrearEvento'])->name('VerCrearEvento');
+Route::post('Evento/crear',[ControllerEvent::class,'crear'])->name('CrearEvento');
+Route::get('Evento/detalles/{id}',[ControllerEvent::class,'detallesEvento'])->name('DetallesEvento');
 Route::post('Evento/actualizar',[ControllerEvent::class,'actualizarEvento'])->name('ActualizarEvento');
-Route::get('Evento/details/{id}',[ControllerEvent::class,'details']);
-Route::get('Evento/index',[ControllerEvent::class,'index'])->name('Calendario');
-Route::get('Evento/index/{month}',[ControllerEvent::class,'index_month'])->name('CalendarioMes');
+Route::get('Evento/calendario',[ControllerEvent::class,'actual'])->name('Calendario');
+Route::get('Evento/calendario/anterior/{month}',[ControllerEvent::class,'mesAnterior'])->name('MesAnterior');
+Route::get('Evento/calentario/siguiente/{month}',[ControllerEvent::class,'mesSiguiente'])->name('MesSiguiente');
 Route::post('Evento/calendario',[ControllerEvent::class,'calendario']);

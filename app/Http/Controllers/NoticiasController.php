@@ -33,10 +33,9 @@ class NoticiasController extends Controller
 
   public function verNoticias(Request $request){
     $hoy = Carbon::now()->toDateString();
-
+    //dd($hoy);
     $lista_noticias = Pub::with('autor_pub:uuid,primer_nombre,apellido_paterno')
       ->with('comments_pub')
-      ->with('respuestas_comments_pub')
       ->where('activa',true)
       ->where('fecha_publicacion','<=',$hoy)
       ->orderBy('fecha_publicacion','desc')
@@ -52,7 +51,6 @@ class NoticiasController extends Controller
     $mes = $request->mes;
     $lista_noticias = Pub::with('autor_pub:uuid,primer_nombre,apellido_paterno')
       ->with('comments_pub')
-      ->with('respuestas_comments_pub')
       ->where('activa',true)
       ->whereMonth('fecha_publicacion','=',$mes)
       ->orderBy('fecha_publicacion','desc')
@@ -110,7 +108,7 @@ class NoticiasController extends Controller
   }
 
   public function cumpleanios(){
-    $cumpleanios = DB::table('empresas_empleados')
+    $cumpleanios = DB::table('personas')
       ->where('fecha_nacimiento','!=',null)
       ->whereraw('month(fecha_nacimiento)=month(NOW())')
       ->get();

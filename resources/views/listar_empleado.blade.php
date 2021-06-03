@@ -21,6 +21,7 @@
           <th scope="col">RFC</th>
           <th scope="col">NSS</th>
           <th scope="col">Correos</th>
+          <th scope="col">Telefonos</th>
 
           @auth
           @if(Auth::user()->email == 'admin@oshuntrading.com')
@@ -33,13 +34,21 @@
         @foreach($empleados as $empleado)
 
         <tr>
-        <td>{{ $empleado->primer_nombre." ".$empleado->segundo_nombre." ".$empleado->apellido_paterno." ".$empleado->apellido_materno  }}</td>
+        <td>{{ $empleado->persona_EEmp->primer_nombre." ".$empleado->persona_EEmp->segundo_nombre." ".$empleado->persona_EEmp->apellido_paterno." ".$empleado->persona_EEmp->apellido_materno  }}</td>
         <td>{{$empleado->curp}}</td>
         <td>{{$empleado->rfc}}</td>
         <td>{{$empleado->n_seguro_social}}</td>
         <td>{{$empleado->correo_EEmp->email_empresa}}.<br> Correo empresa <br>
-            {{$empleado->correo_EEmp->email_personal}}. <br>Correo Personal
+            @if($empleado->correo_EEmp->email_personal!=null)
+              {{$empleado->correo_EEmp->email_personal}}. <br>Correo Personal
+            @endif
         </td>
+        <td>
+          @foreach($empleado->telefonos_EEmp as $telefono)
+
+              {{ $telefono-> numero." Ext: ".$telefono-> extension }}
+              {{$telefono->catalogoTelefonos_UTel->tipo}}
+          @endforeach</td>
           @auth
           @if(Auth::user()->email == 'admin@oshuntrading.com')
 

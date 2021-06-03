@@ -28,17 +28,6 @@ class HoraZona
     $this->completo = $this->fecha .' '. $this->hora;
   }
 
-  public function fechaFormatoZ($fecha1, $fecha2) {
-    $seconds = strtotime($fecha1) - strtotime($fecha2);
-
-    $days    = floor($seconds / 86400);
-    $hours   = floor(($seconds - ($days * 86400)) / 3600);
-    $minutes = floor(($seconds - ($days * 86400) - ($hours * 3600))/60);
-    $seconds = floor(($seconds - ($days * 86400) - ($hours * 3600) - ($minutes*60)));
-
-    return $days;
-  }
-
   public function fecha() {
     return $this->fecha;
   }

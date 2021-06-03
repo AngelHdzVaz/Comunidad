@@ -31,25 +31,25 @@
                               <div class="form-row">
                                 <label for="ipt_primer_nombre" class="p-3 col-md-4 col-form-label ">{{ __('Primer Nombre') }} <span class="text-red">*</span></label>
                                 <div class="p-1 col-md-6">
-                                    <input id="ipt_primer_nombre" type="text" class="form-control " name="primer_nombre" value="{{ $empleado_datos->primer_nombre}}"  >
+                                    <input id="ipt_primer_nombre" type="text" class="form-control " name="primer_nombre" value="{{ $empleado_datos->persona_EEmp->primer_nombre}}"  >
                                 </div>
                               </div>
                               <div class="form-row">
                                 <label for="ipt_segundo_nombre" class="p-3 col-md-4 col-form-label ">{{ __('Segundo Nombre') }} </label>
                                 <div class="p-1 col-md-6">
-                                    <input id="ipt_segundo_nombre" type="text" class="form-control " name="segundo_nombre" value="{{ $empleado_datos->segundo_nombre }}"  >
+                                    <input id="ipt_segundo_nombre" type="text" class="form-control " name="segundo_nombre" value="{{ $empleado_datos->persona_EEmp->segundo_nombre }}"  >
                                 </div>
                               </div>
                               <div class="form-row">
                                 <label for="ipt_apellido_paterno" class="p-3 col-md-4 col-form-label ">{{ __('Apellido Paterno') }} <span class="text-red">*</span></label>
                                 <div class="p-1 col-md-6">
-                                    <input id="ipt_apellido_paterno" type="text" class="form-control " name="apellido_paterno" value="{{ $empleado_datos->apellido_paterno }}"  >
+                                    <input id="ipt_apellido_paterno" type="text" class="form-control " name="apellido_paterno" value="{{ $empleado_datos->persona_EEmp->apellido_paterno }}"  >
                                 </div>
                               </div>
                               <div class="form-row">
                                 <label for="ipt_apellido_materno" class="p-3 col-md-4 col-form-label ">{{ __('Apellido Materno') }}</label>
                                 <div class="p-2 col-md-6">
-                                    <input id="ipt_apellido_materno" type="text" class="form-control " name="apellido_materno" value="{{ $empleado_datos->apellido_materno }}"  >
+                                    <input id="ipt_apellido_materno" type="text" class="form-control " name="apellido_materno" value="{{ $empleado_datos->persona_EEmp->apellido_materno }}"  >
                                 </div>
                               </div>
                               <div class="form-row">
@@ -77,9 +77,13 @@
                                 </div>
                               </div>
                               <div class="form-row">
-                                <label for="name" class="col-md-4 col-form-label text-md-center">Correo Personal<span class="text-red">*</span></label>
-                                <div class="p-2 col-md-6">
-                                    <input id="ipt_correo_personal" type="text" class="form-control " name="correo_personal" value="{{ $empleado_datos->correo_EEmp->email_personal }}"  autofocus>
+                                <label for="name" class="col-md-4 col-form-label text-md-center">Telefono Empresa<span class="text-red">*</span> </label>
+                                <div class="p-2 col-md-3">
+                                    <input id="ipt_telefono_empresa" type="tel" class="form-control " name="telefono_empresa" value="{{ $empleado_datos->telefonos_EEmp->pluck('numero')->first() }}"  autofocus>
+                                </div>
+                                <label for="name" class="col-md-2 col-form-label text-md-center">Ext:</label>
+                                <div class="p-2 col-md-2">
+                                    <input id="ipt_extension_empresa" type="tel" class="form-control " name="extension_empresa" value="{{ $empleado_datos->telefonos_EEmp->pluck('extension')->first() }}"  autofocus>
                                 </div>
                               </div>
                             </div>
@@ -92,6 +96,23 @@
                             </div>
                             <div id="acd_elm_generales" class="collapse" aria-labelledby="datos_generales" data-parent="#acd_opciones_edicion">
                               <div class="card-body">
+                                <div class="form-row">
+                                  <label for="name" class="col-md-4 col-form-label text-md-center">Correo Personal</label>
+                                  <div class="p-2 col-md-6">
+                                      <input id="ipt_correo_personal" type="text" class="form-control " name="correo_personal" value="{{ $empleado_datos->correo_EEmp->email_personal }}"  autofocus>
+                                  </div>
+                                </div>
+                                <div class="form-row">
+                                  <label for="name" class="col-md-4 col-form-label text-md-center">Telefono Personal </label>
+                                  <div class="p-2 col-md-3">
+                                      <input id="ipt_telefono_personal" type="tel" class="form-control " name="telefono_personal" value="{{ $empleado_datos->telefonos_EEmp->pluck('numero')->get(1) }}"  autofocus>
+                                  </div>
+                                  <label for="name" class="col-md-2 col-form-label text-md-center">Ext:</label>
+                                  <div class="p-2 col-md-2">
+                                      <input id="ipt_extension_empresa" type="tel" class="form-control " name="extension_personal" value="{{ $empleado_datos->telefonos_EEmp->pluck('extension')->get(1)}}" autofocus>
+                                  </div>
+                                </div>
+
                                 <div class="form-row">
                                   <label for="name" class="p-3 col-md-4 col-form-label text-md-center">Estado civil</label>
                                   <div  class="p-2 col-md-6 text-md-center">
@@ -133,7 +154,7 @@
                                 <div class="form-row">
                                   <label for="name" class="col-md-4 col-form-label text-md-center">Fecha de Nacmimiento</label>
                                   <div class="p-2 col-md-6">
-                                      <input class="form-control text-md-center" type="date"  id="ipt_fecha_nacimiento" name="fecha_nacimiento" value="{{ $empleado_datos->fecha_nacimiento }}">
+                                      <input class="form-control text-md-center" type="date"  id="ipt_fecha_nacimiento" name="fecha_nacimiento" value="{{ $empleado_datos->persona_EEmp->fecha_nacimiento }}">
                                   </div>
                                 </div>
                                 <div class="form-row">
