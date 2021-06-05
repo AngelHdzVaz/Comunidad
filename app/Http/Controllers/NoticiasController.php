@@ -10,6 +10,8 @@ use Auth; //autentificacion
 use Log; //archivo log
 use Mail; //servicios de correo
 use Ctt;
+use Session;
+use App\Http\Dtos\UsuarioDatos;
 use App\Models\Empresas_empleado as EEmp;
 use App\Models\Persona as Per ;
 use App\Models\Usuario as Usua ;
@@ -34,6 +36,8 @@ class NoticiasController extends Controller
   public function verNoticias(Request $request){
     $hoy = Carbon::now()->toDateString();
     //dd($hoy);
+      $usuario_dto = Session::get('usuario_dto');
+
     $lista_noticias = Pub::with('autor_pub:uuid,primer_nombre,apellido_paterno')
       ->with('comments_pub')
       ->where('activa',true)
@@ -75,13 +79,15 @@ class NoticiasController extends Controller
 
   public function registrarNoticia(Request $request){
     try {
+      $usuario_dto = Session::get('usuario_dto');
+      $autor= $usuario_dto->roles()->pluck('uuid_usuario_rol');
       $titulo = $request->titulo;
       $fecha = $request->fecha;
       $resumen = $request->resumen;
       $descripcion = $request->descripcion;
       $activo = $request->activo;
       $evento = $request->evento;
-      $autor = Auth::user()->pluck('uuid')->first();
+
       //validacion
       //dd($titulo,$fecha,$resumen,$descripcion,$activo,$evento,$autor);
       DB::beginTransaction();
@@ -113,6 +119,7 @@ class NoticiasController extends Controller
       ->whereraw('month(fecha_nacimiento)=month(NOW())')
       ->get();
       setlocale(LC_ALL, 'es');
+      //dd($cumpleanios);
     return view('cumpleanios',compact('cumpleanios'));
   }
 

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Persona as Per;
 
 class Usuario extends Authenticatable
 {
@@ -35,4 +36,8 @@ class Usuario extends Authenticatable
       'remeber_token'
 
 ];
+
+  public function datosUsuario_Persona(){
+    return $this->hasOne(Per::class,'uuid','uuid');
+  }
 }

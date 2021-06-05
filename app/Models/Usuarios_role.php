@@ -18,6 +18,6 @@ class Usuarios_role extends Model
 ];
 
 public function catalogoRoles_URol(){
-  return $this->hasOne(CRol::class,'id_rol','id');
+  return $this->hasOne(CRol::class,'id','id_rol');
 }
 }

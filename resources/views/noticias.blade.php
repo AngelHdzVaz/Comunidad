@@ -2,15 +2,13 @@
 @section('content')
 
 <div class="container">
-  @auth
-    @if(Auth::user()->email == 'admin@oshuntrading.com')
       <form action="{{ route('VerRegistroNoticia') }}" method="get">
         @csrf
         <button type="submit" class="btn btn-primary align-right">Nuevo</button>
       </form>
-    @endif
-  @endauth
-
+  <?php
+    $usuario_dto = Session::get('usuario_dto');
+   ?>
   <!doctype html>
   <html lang="en">
   <head>
@@ -47,7 +45,6 @@
               <form  method="POST" action="{{ route('ComentarNoticia') }}">
                 @csrf
                 <input type="hidden" name="noticia" VALUE="{{$noticia->id}}">
-                <input type="hidden" name="autor" VALUE="{{$noticia->autor}}">
                 <div class="col-md-9">
                   <input id="ipt_comentario" type="text" class="form-control " name="comentario" value="{{ old('comentario') }}" placeholder="Escribe tu comentario..." >
                 </div>
@@ -67,19 +64,19 @@
                            <small>{{Carbon\Carbon::parse(strtotime($comentario->created_at))->formatLocalized('%d de %B del %Y %H:%M:%S')}} </small>
                       </div>
                       <div class="action d-flex justify-content-between mt-2 align-items-center">
-                        <div class="reply px-4">
-                          <form  method="POST" action="{{ route('EliminarComentario') }}">
-                            @csrf
-                            <input type="hidden" name="noticia" value="{{ $noticia->id }}">
-                            <input type="hidden" name="uuid_comentario" VALUE="{{ $comentario->comentario_uuid }}">
-                            <input type="hidden" name="autor" VALUE="{{ $comentario->autor_comentario_uuid }}">
-                            <input type="hidden" name="comentario" VALUE="{{ $comentario->comentario }}">
-                            <button class="col-md-6 btn" type="submit">{{ __('Eliminar') }}</button>
-                          </form>
-                        </div>
-                         <div class="icons align-items-center"> <i class="fa fa-star text-warning"></i>
-                          <i class="fas fa-check"></i>
-                        </div>
+                        @if($usuario_dto->roles()->pluck('uuid_usuario_rol')->first()==$comentario->autor_comentario_uuid)
+                          <div class="reply px-4">
+                            <form  method="POST" action="{{ route('EliminarComentario') }}">
+                              @csrf
+                              <input type="hidden" name="noticia" value="{{ $noticia->id }}">
+                              <input type="hidden" name="uuid_comentario" VALUE="{{ $comentario->comentario_uuid }}">
+                              <input type="hidden" name="autor" VALUE="{{ $comentario->autor_comentario_uuid }}">
+                              <input type="hidden" name="comentario" VALUE="{{ $comentario->comentario }}">
+                              <button class="col-md-6 btn" type="submit">{{ __('Eliminar') }}</button>
+                            </form>
+                          </div>
+                        @endif
+
                       </div>
 
                 @endforeach

@@ -10,7 +10,9 @@ use Auth; //autentificacion
 use Log; //archivo log
 use Mail; //servicios de correo
 use Ctt;
+use Session;
 use App\Mail\PreregistroContactanos;
+use App\Http\Dtos\UsuarioDatos;
 use App\Models\Preregistro as PreR ;
 use App\Models\Empresas_empleado as EEmp;
 use App\Models\Comentario as Com ;
@@ -23,11 +25,11 @@ class ComentariosController extends Controller
 {
   public function comentarNoticia(Request $request){
     try {
-
+      $usuario_dto = Session::get('usuario_dto');
       $noticia = $request->noticia;
       $comentario  = $request->comentario;
-      $autor = Auth::user()->pluck('uuid')->first();
       //validacion
+      $autor= $usuario_dto->roles()->pluck('uuid_usuario_rol')->first();
       $fecha = Carbon::now()->toDateString();
     // dd($noticia,$comentario,$autor);
       DB::beginTransaction();

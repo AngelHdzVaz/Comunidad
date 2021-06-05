@@ -49,6 +49,10 @@
     </script>
   @endif
 
+  <?php
+    $usuario_dto = Session::get('usuario_dto');
+   ?>
+
   @if(Route::currentRouteName() == 'welcome')
     <div id="app">
       <section class="preloader">
@@ -65,10 +69,10 @@
                 <div class="collapse navbar-collapse">
                           @guest
                           <a href="{{ route('welcome') }}" class="navbar-brand smoothScroll">
-                            <img src="{{asset('images/comunity.jpg')}}" width="50" height="50" alt="">
+                          Inicio
                           </a>
                           @else
-                          <a href="{{ route('home') }}" class="navbar-brand smoothScroll">Comunidad</a>
+                          <a href="{{ route('VerNoticias') }}" class="navbar-brand smoothScroll">Comunidad</a>
                           @endauth
                           <a href="#feature" class=" navbar-brand smoothScroll">Caracteristícas</a>
                           <a href="#about" class="navbar-brand smoothScroll">Sobre Nosotros</a>
@@ -91,7 +95,7 @@
                                      @else
                                          <li class="nav-item dropdown">
                                              <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                                 {{ Auth::user()->email }}
+                                                 {{ $usuario_dto->primerNombrePrimerApellido()}}
                                              </a>
                                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                                  <a class="dropdown-item" href="{{ route('logout') }}"
@@ -123,9 +127,17 @@
           </button>
             </a>
             @else
-            <a href="{{ route('home') }}" class="navbar-brand smoothScroll">Home</a>
-            <a href="{{ route('ListarEmpleado') }}" class="navbar-brand smoothScroll">Directorio</a>
-            <a href="{{ route('VerNoticias') }}" class="navbar-brand smoothScroll">Noticias</a>
+            @if($usuario_dto->cuentaConRolDe('SYSADMIN'))
+              <a href="{{ route('ListarEmpleado') }}" class="navbar-brand smoothScroll">Colaboradores</a>
+            @else
+              <a href="{{ route('Directorio') }}" class="navbar-brand smoothScroll">Directorio</a>
+            @endif
+
+              @if($usuario_dto->cuentaConRolDe('CHISMOLERO!') || $usuario_dto->cuentaConRolDe('SYSADMIN') )
+                <a href="{{ route('VerNoticias') }}" class="navbar-brand smoothScroll">Noticias</a>
+              @else
+                <a href="{{ route('VerNoticias') }}" class="navbar-brand smoothScroll">Noticias </a>
+              @endif
             @endauth
 
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -146,7 +158,7 @@
                   @else
                       <li class="nav-item dropdown">
                           <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                              // aqui nombre
+                              {{   $usuario_dto->primerNombrePrimerApellido()}}
                           </a>
                           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                               <a class="dropdown-item" href="{{ route('logout') }}"

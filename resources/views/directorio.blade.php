@@ -15,19 +15,19 @@
       </thead>
       <tbody>
         @foreach($empleados as $empleado)
+          @if($empleado->correo_EEmp->email_empresa != "admin@oshuntrading.com")
+            <tr>
+            <td>{{ $empleado->persona_EEmp->primer_nombre." ".$empleado->persona_EEmp->segundo_nombre." ".$empleado->persona_EEmp->apellido_paterno." ".$empleado->persona_EEmp->apellido_materno  }}</td>
+            <td>{{$empleado->correo_EEmp->email_empresa}}.<br>
+            </td>
+            <td>
+              @foreach($empleado->telefonos_EEmp as $telefono)
 
-        <tr>
-        <td>{{ $empleado->persona_EEmp->primer_nombre." ".$empleado->persona_EEmp->segundo_nombre." ".$empleado->persona_EEmp->apellido_paterno." ".$empleado->persona_EEmp->apellido_materno  }}</td>
-        <td>{{$empleado->correo_EEmp->email_empresa}}.<br> 
-        </td>
-        <td>
-          @foreach($empleado->telefonos_EEmp as $telefono)
-
-              {{ $telefono-> numero." Ext: ".$telefono-> extension }}
-              {{$telefono->catalogoTelefonos_UTel->tipo}}<br>
-          @endforeach</td>
-
-        </tr>
+                  {{ $telefono-> numero." Ext: ".$telefono-> extension }}
+                  {{$telefono->catalogoTelefonos_UTel->tipo}}<br>
+              @endforeach</td>
+            </tr>
+          @endif
         @endforeach
       </tbody>
     </table>

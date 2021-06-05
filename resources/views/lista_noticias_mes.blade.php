@@ -2,15 +2,10 @@
 @section('content')
 
 <div class="container">
-  @auth
-    @if(Auth::user()->email == 'admin@oshuntrading.com')
       <form action="{{ route('VerRegistroNoticia') }}" method="get">
         @csrf
         <button type="submit" class="btn btn-primary align-right">Nuevo</button>
       </form>
-    @endif
-  @endauth
-
   <!doctype html>
   <html lang="en">
   <head>

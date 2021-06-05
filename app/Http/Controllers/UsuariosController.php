@@ -67,7 +67,7 @@ class UsuariosController extends Controller
           $usuario_dto = UsuarioDatos::instancia();
           Session::put('usuario_dto', $usuario_dto);
 
-          return redirect()->route('home');
+          return redirect('/noticias');
         } else {
 
           return redirect()->back()->with([
@@ -156,7 +156,7 @@ class UsuariosController extends Controller
     try {
       $usuario_dto = Session::get('usuario_dto');
       $tiempo_obj = new HoraZona($usuario_dto->zonaHoraria());
-      dd($tiempo_obj);
+      //dd($tiempo_obj);
       $tiempo_local = $tiempo_obj->fechaYHora();
       $primer_nombre = $request->primer_nombre;
       $segundo_nombre = $request->segundo_nombre;
@@ -172,242 +172,240 @@ class UsuariosController extends Controller
       $zona_horaria = $request->zona_horaria;
       //dd($telefono,$extension);
         //validacion
-        if($primer_nombre){
-          if (!ctype_alpha($primer_nombre)) {
-            return redirect()->back()->withInput()->with([
-              'titulo' => 'Verifica el campo Nombre',
-              'mensaje' => 'El valor recibido no contiene unicamente letras',
-              'tipo' => 'error'
-            ]);
-          }
-          }else{
+      if($primer_nombre){
+        if (!ctype_alpha($primer_nombre)) {
           return redirect()->back()->withInput()->with([
-            'titulo' => 'Verifica el campo Primer Nombre',
-            'mensaje' => 'El campo esta vacío',
+            'titulo' => 'Verifica el campo Nombre',
+            'mensaje' => 'El valor recibido no contiene unicamente letras',
             'tipo' => 'error'
           ]);
         }
+        }else{
+        return redirect()->back()->withInput()->with([
+          'titulo' => 'Verifica el campo Primer Nombre',
+          'mensaje' => 'El campo esta vacío',
+          'tipo' => 'error'
+        ]);
+      }
 
-        if($segundo_nombre){
-          if (!ctype_alpha($segundo_nombre)) {
-            return redirect()->back()->withInput()->with([
-              'titulo' => 'Verifica el campo Nombre',
-              'mensaje' => 'El valor recibido no contiene unicamente letras',
-              'tipo' => 'error'
-            ]);
-          }
-        }
-
-        if($apellido_paterno){
-          if (!ctype_alpha($apellido_paterno)) {
-            return redirect()->back()->withInput()->with([
-              'titulo' => 'Verifica el campo Apellido Paterno',
-              'mensaje' => 'El valor recibido no contiene unicamente letras',
-              'tipo' => 'error'
-            ]);
-          }
-          }else{
+      if($segundo_nombre){
+        if (!ctype_alpha($segundo_nombre)) {
           return redirect()->back()->withInput()->with([
-            'titulo' => 'Verifica el campo Apellido',
-            'mensaje' => 'El campo esta vacío',
+            'titulo' => 'Verifica el campo Nombre',
+            'mensaje' => 'El valor recibido no contiene unicamente letras',
             'tipo' => 'error'
           ]);
         }
+      }
 
-        if($apellido_materno){
-          if (!ctype_alpha($apellido_materno)) {
-            return redirect()->back()->withInput()->with([
-              'titulo' => 'Verifica el campo Apellido Materno',
-              'mensaje' => 'El valor recibido no contiene unicamente letras',
-              'tipo' => 'error'
-            ]);
-          }
+      if($apellido_paterno){
+        if (!ctype_alpha($apellido_paterno)) {
+          return redirect()->back()->withInput()->with([
+            'titulo' => 'Verifica el campo Apellido Paterno',
+            'mensaje' => 'El valor recibido no contiene unicamente letras',
+            'tipo' => 'error'
+          ]);
         }
+        }else{
+        return redirect()->back()->withInput()->with([
+          'titulo' => 'Verifica el campo Apellido',
+          'mensaje' => 'El campo esta vacío',
+          'tipo' => 'error'
+        ]);
+      }
 
-        if($rfc){
-          if (strlen ($rfc)>13){
-            return redirect()->back()->withInput()->with([
-              'titulo' => 'Verifica el campo RFC',
-              'mensaje' => 'El valor que ingresaste no es válido',
-              'tipo' => 'error'
-            ]);
-          }
-          }else {
+      if($apellido_materno){
+        if (!ctype_alpha($apellido_materno)) {
+          return redirect()->back()->withInput()->with([
+            'titulo' => 'Verifica el campo Apellido Materno',
+            'mensaje' => 'El valor recibido no contiene unicamente letras',
+            'tipo' => 'error'
+          ]);
+        }
+      }
+
+      if($rfc){
+        if (strlen ($rfc)>13){
           return redirect()->back()->withInput()->with([
             'titulo' => 'Verifica el campo RFC',
-            'mensaje' => 'El valorno puede estar vacío',
+            'mensaje' => 'El valor que ingresaste no es válido',
             'tipo' => 'error'
           ]);
-          }
+        }
+        }else {
+        return redirect()->back()->withInput()->with([
+          'titulo' => 'Verifica el campo RFC',
+          'mensaje' => 'El valorno puede estar vacío',
+          'tipo' => 'error'
+        ]);
+        }
 
-        if($curp){
-          if (strlen ($curp)!=18 ){
-            return redirect()->back()->withInput()->with([
-              'titulo' => 'Verifica el campo curp',
-              'mensaje' => 'El valor que ingresaste no es válido',
-              'tipo' => 'error'
-            ]);
-          }
-          }else {
+      if($curp){
+        if (strlen ($curp)!=18 ){
           return redirect()->back()->withInput()->with([
             'titulo' => 'Verifica el campo curp',
+            'mensaje' => 'El valor que ingresaste no es válido',
+            'tipo' => 'error'
+          ]);
+        }
+        }else {
+        return redirect()->back()->withInput()->with([
+          'titulo' => 'Verifica el campo curp',
+          'mensaje' => 'El valor no puede estar vacío',
+          'tipo' => 'error'
+        ]);
+        }
+
+      if($numero_seguro_social){
+        if (strlen ($numero_seguro_social)>11){
+          return redirect()->back()->withInput()->with([
+            'titulo' => 'Verifica el campo NSS',
+            'mensaje' => 'El valor que ingresaste no es válido',
+            'tipo' => 'error'
+          ]);
+        }
+        if(!is_numeric($numero_seguro_social) ){
+          return redirect()->back()->withInput()->with([
+            'titulo' => 'Verifica el campo NSS',
+            'mensaje' => 'El valor que ingresaste no es válido',
+            'tipo' => 'error'
+          ]);
+        }
+        }else{
+          return redirect()->back()->withInput()->with([
+            'titulo' => 'Verifica el campo NSS',
             'mensaje' => 'El valor no puede estar vacío',
             'tipo' => 'error'
           ]);
-          }
+        }
 
-        if($numero_seguro_social){
-          if (strlen ($numero_seguro_social)>11){
-            return redirect()->back()->withInput()->with([
-              'titulo' => 'Verifica el campo NSS',
-              'mensaje' => 'El valor que ingresaste no es válido',
-              'tipo' => 'error'
-            ]);
-          }
-          if(!is_numeric($numero_seguro_social) ){
-            return redirect()->back()->withInput()->with([
-              'titulo' => 'Verifica el campo NSS',
-              'mensaje' => 'El valor que ingresaste no es válido',
-              'tipo' => 'error'
-            ]);
-          }
-          }else{
-            return redirect()->back()->withInput()->with([
-              'titulo' => 'Verifica el campo NSS',
-              'mensaje' => 'El valor no puede estar vacío',
-              'tipo' => 'error'
-            ]);
-          }
-
-        if($correo_empresa){
-          if (!filter_var($correo_empresa, FILTER_VALIDATE_EMAIL)) {
-            return redirect()->back()->withInput()->with([
-              'titulo' => 'Verifica el campo Correo Empresa',
-              'mensaje' => 'El valor que ingresaste no es válido',
-              'tipo' => 'error'
-            ]);
-          }
-          }else{
-            return redirect()->back()->withInput()->with([
-              'titulo' => 'Verifica el campo Correo Empresa',
-              'mensaje' => 'El valor esta vacío',
-              'tipo' => 'error'
-            ]);
-          }
-
-        $correo_empresa_existe = PCor::select('id')->where('email_empresa',$correo_empresa)->first();
-        if($correo_empresa_existe!=null){
+      if($correo_empresa){
+        if (!filter_var($correo_empresa, FILTER_VALIDATE_EMAIL)) {
           return redirect()->back()->withInput()->with([
-            'titulo' => 'Correo no aceptado',
-            'mensaje' => 'El correo empresarial ya ha sido registrado',
+            'titulo' => 'Verifica el campo Correo Empresa',
+            'mensaje' => 'El valor que ingresaste no es válido',
             'tipo' => 'error'
           ]);
-          }
-
-        $rfc_existe = EEmp::select('id')->where('rfc',$rfc)->first();
-        if($rfc_existe!=null){
+        }
+        }else{
           return redirect()->back()->withInput()->with([
-            'titulo' => 'RFC no aceptado',
-            'mensaje' => 'RFC ya registrado',
+            'titulo' => 'Verifica el campo Correo Empresa',
+            'mensaje' => 'El valor esta vacío',
             'tipo' => 'error'
           ]);
-          }
+        }
 
-        $numero_seguro_social_existe = EEmp::select('id')->where('n_seguro_social',$numero_seguro_social)->first();
-        if($numero_seguro_social_existe!=null){
-          return redirect()->back()->withInput()->with([
-            'titulo' => 'Numero de Seguro Social',
-            'mensaje' => 'Ya se encuentra registrado',
-            'tipo' => 'error'
-          ]);
-          }
-
-          if(!is_numeric($telefono)&&strlen($telefono=10)){
-            return redirect()->back()->withInput()->with([
-              'titulo' => 'Telefono Invalido',
-              'mensaje' => 'El telefono ingresado no es correcto',
-              'tipo' => 'error'
-            ]);
-          }
-
-          if(!$extension && is_numeric($extension)){
-            return redirect()->back()->withInput()->with([
-              'titulo' => 'Extensión',
-              'mensaje' => 'Extensión no valida',
-              'tipo' => 'error'
-            ]);
-            }
-
-          if($zona_horaria==null){
-          Log::error('UsuariosController@registroColaborador => Variable zona_horaria con valor nulo');
-            return redirect()->back()->with([
-              'titulo' => 'Ha ocurrido un error',
-              'mensaje' => 'Intenta nuevamente mas tarde',
-              'tipo' => 'error'
-            ]);
-          }
-
-        DB::beginTransaction();
-       $var1 = EEmp::create([
-          //colocar uuid? para conectar todas tablas y vistas??
-          'uuid' => (string) Str::uuid(),
-          'rfc' => $rfc,
-          'curp' => $curp,
-          'n_seguro_social' => $numero_seguro_social,
-          'tiempo_registro' => $tiempo_local
+      $correo_empresa_existe = PCor::select('id')->where('email_empresa',$correo_empresa)->first();
+      if($correo_empresa_existe!=null){
+        return redirect()->back()->withInput()->with([
+          'titulo' => 'Correo no aceptado',
+          'mensaje' => 'El correo empresarial ya ha sido registrado',
+          'tipo' => 'error'
         ]);
+        }
 
-        Usua::create([
-          'uuid' => $var1->uuid,
-          'email' => $correo_empresa,
-          'password' => Hash::make($contrasenia),
-          'zona_horaria' => $zona_horaria,
-          'tiempo_registro' => $tiempo_local
+      $rfc_existe = EEmp::select('id')->where('rfc',$rfc)->first();
+      if($rfc_existe!=null){
+        return redirect()->back()->withInput()->with([
+          'titulo' => 'RFC no aceptado',
+          'mensaje' => 'RFC ya registrado',
+          'tipo' => 'error'
         ]);
+        }
 
-        URol::create([
-          'uuid_usuario_rol' => $var1->uuid,
-          'id_rol' => 10
+      $numero_seguro_social_existe = EEmp::select('id')->where('n_seguro_social',$numero_seguro_social)->first();
+      if($numero_seguro_social_existe!=null){
+        return redirect()->back()->withInput()->with([
+          'titulo' => 'Numero de Seguro Social',
+          'mensaje' => 'Ya se encuentra registrado',
+          'tipo' => 'error'
         ]);
+        }
 
-        UTel::create([
-          'uuid_usuario_telefono' => $var1->uuid,
-          'numero' => $telefono,
-          'extension' => $extension,
-          'id_tipo' => 3
+      if(!is_numeric($telefono)&&strlen($telefono=10)){
+        return redirect()->back()->withInput()->with([
+          'titulo' => 'Telefono Invalido',
+          'mensaje' => 'El telefono ingresado no es correcto',
+          'tipo' => 'error'
         ]);
+      }
 
-
-        $var2 = Per::create([
-          'uuid' => $var1->uuid,
-          'primer_nombre' => $primer_nombre,
-          'segundo_nombre' => $segundo_nombre,
-          'apellido_paterno' => $apellido_paterno,
-          'apellido_materno' => $apellido_materno
+      if(!$extension && is_numeric($extension)){
+        return redirect()->back()->withInput()->with([
+          'titulo' => 'Extensión',
+          'mensaje' => 'Extensión no valida',
+          'tipo' => 'error'
         ]);
+        }
 
-
-        PCor::create([
-            'uuid' => $var1->uuid,
-            'id_persona' => $var2->id_persona,
-            'email_empresa' => $correo_empresa
-        ]);
-
-/*        $var1->id_estatus = 8;
-        $var1->save();
-*/
-        DB::commit();
-
+      if($zona_horaria==null){
+      Log::error('UsuariosController@registroColaborador => Variable zona_horaria con valor nulo');
         return redirect()->back()->with([
-          'titulo' => 'Registro exitoso',
-          'mensaje' => '',
-          'tipo' => 'success'
+          'titulo' => 'Ha ocurrido un error',
+          'mensaje' => 'Intenta nuevamente mas tarde',
+          'tipo' => 'error'
         ]);
+      }
 
-    } catch (\Exception $e) {
-      DB::rollback();
-      return $e->getMessage();
-    }
+      DB::beginTransaction();
+     $var1 = EEmp::create([
+        //colocar uuid? para conectar todas tablas y vistas??
+        'uuid' => (string) Str::uuid(),
+        'rfc' => $rfc,
+        'curp' => $curp,
+        'n_seguro_social' => $numero_seguro_social,
+        'tiempo_registro' => $tiempo_local
+      ]);
+
+      Usua::create([
+        'uuid' => $var1->uuid,
+        'email' => $correo_empresa,
+        'password' => Hash::make($contrasenia),
+        'zona_horaria' => $zona_horaria,
+        'tiempo_registro' => $tiempo_local
+      ]);
+
+      URol::create([
+        'uuid_usuario_rol' => $var1->uuid,
+        'id_rol' => 10
+      ]);
+
+      UTel::create([
+        'uuid_usuario_telefono' => $var1->uuid,
+        'numero' => $telefono,
+        'extension' => $extension,
+        'id_tipo' => 3
+      ]);
+
+
+      $var2 = Per::create([
+        'uuid' => $var1->uuid,
+        'primer_nombre' => $primer_nombre,
+        'segundo_nombre' => $segundo_nombre,
+        'apellido_paterno' => $apellido_paterno,
+        'apellido_materno' => $apellido_materno
+      ]);
+
+
+      PCor::create([
+          'uuid' => $var1->uuid,
+          'id_persona' => $var2->id_persona,
+          'email_empresa' => $correo_empresa
+      ]);
+
+/*    $var1->id_estatus = 8;
+      $var1->save();
+*/
+      DB::commit();
+      return redirect()->back()->with([
+        'titulo' => 'Registro exitoso',
+        'mensaje' => '',
+        'tipo' => 'success'
+      ]);
+      }catch (\Exception $e) {
+        DB::rollback();
+        return $e->getMessage();
+      }
   }
 
   public function listarEmpleado(Request $request){
@@ -421,7 +419,7 @@ class UsuariosController extends Controller
       ->orderBy('edad','asc')
       ->get();
           //dd($empleados);
-      $empleados = $this->paginacion($empleados->all(), $request,4);
+      $empleados = $this->paginacion($empleados->all(), $request,8);
       setlocale(LC_ALL, 'es');
 
       return view('listar_empleado',compact('empleados'));
@@ -447,7 +445,7 @@ class UsuariosController extends Controller
       ->orderBy('edad','asc')
       ->get();
           //dd($empleados);
-      $empleados = $this->paginacion($empleados->all(), $request,4);
+      $empleados = $this->paginacion($empleados->all(), $request,12);
       setlocale(LC_ALL, 'es');
 
       return view('directorio',compact('empleados'));
@@ -538,6 +536,7 @@ class UsuariosController extends Controller
       $telefono_personal_base = $telefonos_base->pluck('numero')->get(1);
       //dd($telefono_empresa_base,$telefono_empresa,$telefono_personal_base,$telefono_personal);
       //validacion
+
       if($primer_nombre){
         if (!ctype_alpha($primer_nombre)) {
           return redirect()->back()->with([
@@ -789,7 +788,6 @@ class UsuariosController extends Controller
             'extension' => $extension_empresa ,
             'id_tipo' => 3
           ]);
-        Log::debug(1);
         if($telefono_personal_base){
           UTel::where([['uuid_usuario_telefono',$uuid],['numero',$telefono_personal_base]])
           ->update([
@@ -799,7 +797,6 @@ class UsuariosController extends Controller
             'id_tipo' => 2
           ]);
 
-          Log::debug(2);
         }else{
           UTel::create([
             'uuid_usuario_telefono'=> $uuid,
@@ -809,7 +806,6 @@ class UsuariosController extends Controller
           ]);
         }
 
-        Log::debug(3);
       Per::where('uuid',$uuid)->update([
         'primer_nombre' => $primer_nombre,
         'segundo_nombre' => $segundo_nombre,
@@ -827,10 +823,8 @@ class UsuariosController extends Controller
           'email_personal' => $correo_personal
       ]);
 
-      Log::debug(4);
       DB::commit();
 
-      Log::debug(5);
       return redirect()->back()->with([
         'titulo' => 'Actualización exitosa',
         'mensaje' => '',
@@ -853,7 +847,7 @@ class UsuariosController extends Controller
       Per::where('uuid',$uuid)->delete();
       PCor::where('uuid',$uuid)->delete();
       Usua::where('uuid',$uuid)->delete();
-      Pubc::where('uuid',$uuid)->delete();
+      Pubc::where('autor',$uuid)->delete();
       DB::commit();
       return redirect()->back()->with([
         'titulo' => 'Colaborador borrado exitosamente',

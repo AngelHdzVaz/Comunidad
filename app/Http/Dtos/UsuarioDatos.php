@@ -65,14 +65,14 @@ class UsuarioDatos {
     //$this->imagen = Auth::user()->foto;
     //$this->carpeta_privada = Auth::user()->codigo_empresa . '/';
     //$this->reporta_a = Auth::user()->reporta_a;
-    /*$this->roles = Urol::with('catalogoRoles_URol')->where('uuid',Auth::user()->uuid)->get();
+    $this->roles = Urol::with('catalogoRoles_URol')->where('uuid_usuario_rol',Auth::user()->uuid)->get();
 
-      $persona = Persona::where('uuid', Auth::user()->uuid)->first();
+      $persona = Per::where('uuid', Auth::user()->uuid)->first();
       $this->primer_nombre = $persona->primer_nombre;
       $this->segundo_nombre = $persona->segundo_nombre;
       $this->apellido_paterno = $persona->apellido_paterno;
       $this->apellido_materno = $persona->apellido_materno;
-      $this->genero = $persona->genero;*/
+      $this->genero = $persona->genero;
 
   /*  if($this->perfil == 'ONLINE') {
       $cartera = DB::table(Ctt::T057)->select('cartera')
@@ -262,7 +262,7 @@ class UsuarioDatos {
 
   public function cuentaConRolDe($rol_a_buscar) {
     foreach($this->roles as $rol) {
-      if($rol->rol == $rol_a_buscar) {
+      if($rol->catalogoRoles_URol->rol == $rol_a_buscar) {
         return true;
       }
     }

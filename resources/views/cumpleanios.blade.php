@@ -13,8 +13,8 @@
     <tbody>
       @foreach($cumpleanios as $cumple)
       <tr>
-        <td>{{$cumple->persona_EEmp->primer_nombre . " ". $cumple->persona_EEmp->segundo_nombre . " ". $cumple->persona_EEmp->apellido_paterno . " ". $cumple->persona_EEmp->apellido_materno}}</td>
-        <td>{{ Carbon\Carbon::parse(strtotime($cumple->persona_EEmp->fecha_nacimiento))->formatLocalized('%d-%B ') }}</td>
+        <td>{{$cumple->primer_nombre . " ". $cumple->segundo_nombre . " ". $cumple->apellido_paterno . " ". $cumple->apellido_materno}}</td>
+        <td>{{ Carbon\Carbon::parse(strtotime($cumple->fecha_nacimiento))->formatLocalized('%d-%B ') }}</td>
       </tr>
       @endforeach
     </tbody>
