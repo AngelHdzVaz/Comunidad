@@ -39,7 +39,7 @@ class Empresas_empleado extends Model
 ];
 
   public function persona_EEmp(){
-    return $this->hasOne(Per::class,'uuid','uuid')->orderBy('apellido_paterno');
+    return $this->hasOne(Per::class,'uuid','uuid');
   }
 
   public function correo_EEmp(){
@@ -54,5 +54,4 @@ class Empresas_empleado extends Model
   public function telefonos_EEmp(){
     return $this->hasMany(UTel::class,'uuid_usuario_telefono','uuid');
   }
-
 }

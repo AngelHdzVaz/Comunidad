@@ -59,7 +59,6 @@ class NoticiasController extends Controller
       ->whereMonth('fecha_publicacion','=',$mes)
       ->orderBy('fecha_publicacion','desc')
       ->get();
-    dd($lista_noticias);
     $lista_noticias = $this->paginacion($lista_noticias->all(), $request,6);
     $actual = null;
     $meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
@@ -80,14 +79,13 @@ class NoticiasController extends Controller
   public function registrarNoticia(Request $request){
     try {
       $usuario_dto = Session::get('usuario_dto');
-      $autor= $usuario_dto->roles()->pluck('uuid_usuario_rol');
+      $autor= $usuario_dto->roles()->pluck('uuid_usuario_rol')->first();
       $titulo = $request->titulo;
       $fecha = $request->fecha;
       $resumen = $request->resumen;
       $descripcion = $request->descripcion;
       $activo = $request->activo;
       $evento = $request->evento;
-
       //validacion
       //dd($titulo,$fecha,$resumen,$descripcion,$activo,$evento,$autor);
       DB::beginTransaction();
@@ -101,7 +99,6 @@ class NoticiasController extends Controller
            'evento' => $evento,
          ]);
        DB::commit();
-
        return redirect()->back()->with([
          'titulo' => 'Actualización exitosa',
          'mensaje' => 'Publicacion Realizada',
@@ -111,6 +108,23 @@ class NoticiasController extends Controller
        DB::rollback();
        return $e->getMessage();
      }
+  }
+
+  public function eliminarNoticia(Request $request){
+    try {
+      $noticia = $request->noticia;
+      DB::beginTransaction();
+      Pub::where('id',$noticia)->delete();
+      Com::where('id_noticia',$noticia)->delete();
+      DB::commit();
+      return redirect()->back()->with([
+        'titulo' => 'Borrado exitosamente',
+        'mensaje' => '',
+        'tipo' => 'success'
+        ]);
+    } catch (\Exception $e) {
+      return $e->getMessage();
+    }
   }
 
   public function cumpleanios(){

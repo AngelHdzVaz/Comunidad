@@ -3,7 +3,7 @@
 
 <div class="container">
     <h3>Colaboradores</h3>
-    <div class=" row justify-content-end">
+    <div class="p-3 row">
           <form action="{{ route('VerRegistroEmpleado') }}" method="get">
             @csrf
             <button type="submit" class="btn btn-primary" >Registrar Empleado</button>
@@ -18,7 +18,7 @@
           <th scope="col">NSS</th>
           <th scope="col">Correos</th>
           <th scope="col">Telefonos</th>
-            <th scope="col">Operaciones</th>
+          <th scope="col">Operaciones</th>
         </tr>
       </thead>
       <tbody>
@@ -29,19 +29,22 @@
               <td>{{$empleado->curp}}</td>
               <td>{{$empleado->rfc}}</td>
               <td>{{$empleado->n_seguro_social}}</td>
-              <td>{{$empleado->correo_EEmp->email_empresa}}.<br> Correo empresa <br>
+              <td>{{$empleado->correo_EEmp->email_empresa}}.<br>
                   @if($empleado->correo_EEmp->email_personal!=null)
-                    {{$empleado->correo_EEmp->email_personal}}. <br>Correo Personal
+                    {{$empleado->correo_EEmp->email_personal}}. <br>
                   @endif
               </td>
               <td>
               @foreach($empleado->telefonos_EEmp as $telefono)
-
+                @if($telefono->numero && $telefono->extension)
                   {{ $telefono-> numero." Ext: ".$telefono-> extension }}
-                  {{$telefono->catalogoTelefonos_UTel->tipo}}
+                @elseif($telefono->numero && $telefono->extension==null)
+                    {{ $telefono-> numero }}
+                @else
+                @endif
               @endforeach</td>
-            <td><button class="btn" type="button" onclick= "location.href='{{ route('VerEditorEmpleado',['uuid'=>$empleado->where('uuid',$empleado->uuid)->pluck('uuid')->first() ]) }}'"><i class="fas fa-edit "></i> Editar</button>
-                <button class="btn" type="button" onclick= "location.href='{{ route('EliminarEmpleado',['uuid'=>$empleado->where('uuid',$empleado->uuid)->pluck('uuid')->first() ]) }}'"><i class="fas fa-dumpster-fire"></i>Eliminar</button>
+            <td><button class="btn" title="Editar" type="button" onclick= "location.href='{{ route('VerEditorEmpleado',['uuid'=>$empleado->where('uuid',$empleado->uuid)->pluck('uuid')->first() ]) }}'"><i class="fas fa-edit "></i> </button>
+                <button class="btn" title="Eliminar" type="button" onclick= "location.href='{{ route('EliminarEmpleado',['uuid'=>$empleado->where('uuid',$empleado->uuid)->pluck('uuid')->first() ]) }}'"><i class="fas fa-dumpster-fire"></i></button>
             </td>
           </tr>
           @endif
@@ -49,7 +52,6 @@
       </tbody>
     </table>
     <div class="p-3">
-      {{$empleados->links()}}
     </div>
   </div>
 @endsection

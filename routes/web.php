@@ -49,25 +49,25 @@ Route::group(['middleware' => 'controldeaccesos'], function() {
   Route::get('/eliminarEmpleado',[UsuariosController::class,'eliminarEmpleado'])->name('EliminarEmpleado');
   Route::get('/verRegistroNoticia',[NoticiasController::class, 'verRegistroNoticia'])->name('VerRegistroNoticia');
   Route::post('/registroNoticia',[NoticiasController::class,'registrarNoticia'])->name('RegistrarNoticia');
+  Route::get('/eliminarNoticia',[NoticiasController::class, 'eliminarNoticia'])->name('EliminarNoticia');
 
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-//pruebas de rutas
-Route::get('/corporativo/directorio',[UsuariosController::class, 'directorio'])->name('Directorio'); //colaborador
-Route::get('/noticias',[NoticiasController::class, 'verNoticias'])->name('VerNoticias');
-Route::get('/noticias/{mes}',[NoticiasController::class, 'verNoticiasMes'])->name('VerNoticiasMes');
-Route::post('/noticias/comentar_noticia',[ComentariosController::class,'comentarNoticia'])->name('ComentarNoticia');
-Route::post('/noticias/eliminar_comentario',[ComentariosController::class,'eliminarComentario'])->name('EliminarComentario');
-Route::get('/cumpleanios',[NoticiasController::class,'cumpleanios'])->name('Cumpleanios');
-Route::get('/eventos',[NoticiasController::class,'eventos'])->name('Eventos');
-//Route::get('/calendario',[CalendarioController::class,'calendario'])->name('Calendario');
-Route::get('/calendario/registrar',[CalendarioController::class,'calendarioVerRegistro'])->name('CalendarioVerRegistro');
-Route::get('Evento/ver_crear_evento',[ControllerEvent::class,'verCrearEvento'])->name('VerCrearEvento');
-Route::post('Evento/crear',[ControllerEvent::class,'crear'])->name('CrearEvento');
-Route::get('Evento/detalles/{id}',[ControllerEvent::class,'detallesEvento'])->name('DetallesEvento');
-Route::post('Evento/actualizar',[ControllerEvent::class,'actualizarEvento'])->name('ActualizarEvento');
-Route::get('Evento/calendario',[ControllerEvent::class,'actual'])->name('Calendario');
-Route::get('Evento/calendario/anterior/{month}',[ControllerEvent::class,'mesAnterior'])->name('MesAnterior');
-Route::get('Evento/calentario/siguiente/{month}',[ControllerEvent::class,'mesSiguiente'])->name('MesSiguiente');
-Route::post('Evento/calendario',[ControllerEvent::class,'calendario']);
+  Route::get('/corporativo/directorio',[UsuariosController::class, 'directorio'])->name('Directorio'); //colaborador
+  Route::get('/noticias',[NoticiasController::class, 'verNoticias'])->name('VerNoticias');
+  Route::get('/noticias/{mes}',[NoticiasController::class, 'verNoticiasMes'])->name('VerNoticiasMes');
+  Route::post('/noticias/comentar_noticia',[ComentariosController::class,'comentarNoticia'])->name('ComentarNoticia');
+  Route::post('/noticias/eliminar_comentario',[ComentariosController::class,'eliminarComentario'])->name('EliminarComentario');
+  Route::get('/cumpleanios',[NoticiasController::class,'cumpleanios'])->name('Cumpleanios');
+  Route::get('/eventos',[NoticiasController::class,'eventos'])->name('Eventos');
+  //Route::get('/calendario',[CalendarioController::class,'calendario'])->name('Calendario');
+  Route::get('/calendario/registrar',[CalendarioController::class,'calendarioVerRegistro'])->name('CalendarioVerRegistro');
+  Route::get('Evento/ver_crear_evento',[ControllerEvent::class,'verCrearEvento'])->name('VerCrearEvento');
+  Route::post('Evento/crear',[ControllerEvent::class,'crear'])->name('CrearEvento');
+  Route::get('Evento/detalles/{id}',[ControllerEvent::class,'detallesEvento'])->name('DetallesEvento');
+  Route::post('Evento/actualizar',[ControllerEvent::class,'actualizarEvento'])->name('ActualizarEvento');
+  Route::get('Evento/calendario',[ControllerEvent::class,'actual'])->name('Calendario');
+  Route::get('Evento/calendario/anterior/{month}',[ControllerEvent::class,'mesAnterior'])->name('MesAnterior');
+  Route::get('Evento/calentario/siguiente/{month}',[ControllerEvent::class,'mesSiguiente'])->name('MesSiguiente');
+  Route::post('Evento/calendario',[ControllerEvent::class,'calendario']);

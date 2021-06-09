@@ -22,17 +22,17 @@
             </td>
             <td>
               @foreach($empleado->telefonos_EEmp as $telefono)
-
+                @if($telefono->numero && $telefono->extension)
                   {{ $telefono-> numero." Ext: ".$telefono-> extension }}
-                  {{$telefono->catalogoTelefonos_UTel->tipo}}<br>
+                @elseif($telefono->numero && $telefono->extension==null)
+                    {{ $telefono-> numero }}
+                @else
+                @endif
               @endforeach</td>
             </tr>
           @endif
         @endforeach
       </tbody>
     </table>
-    <div class="p-3">
-      {{$empleados->links()}}
-    </div>
   </div>
 @endsection

@@ -2,13 +2,15 @@
 @section('content')
 
 <div class="container">
-      <form action="{{ route('VerRegistroNoticia') }}" method="get">
-        @csrf
-        <button type="submit" class="btn btn-primary align-right">Nuevo</button>
-      </form>
-  <?php
-    $usuario_dto = Session::get('usuario_dto');
-   ?>
+<?php
+$usuario_dto = Session::get('usuario_dto');
+?>
+      @if($usuario_dto->cuentaConRolDe('SYSADMIN'))
+        <form action="{{ route('VerRegistroNoticia') }}" method="get">
+          @csrf
+          <button type="submit" class="btn btn-primary align-right">Nuevo</button>
+        </form>
+      @endif
   <!doctype html>
   <html lang="en">
   <head>
@@ -36,8 +38,18 @@
       </h3>
         @foreach($lista_noticias as $noticia)
             <article class="blog-post"  id="{{ Carbon\Carbon::parse($noticia->fecha_publicacion)->format(' M ') }}">
-
-              <h2 class="blog-post-title">{{ $noticia->titulo  }}</h2>
+              <div class="col-md-9">
+                <h2 class="blog-post-title">{{ $noticia->titulo  }}</h2>
+              </div>
+              <div class="p-5 col-md-3">
+                @if($usuario_dto->cuentaConRolDe('SYSADMIN'))
+                  <form action="{{ route('EliminarNoticia') }}" method="get">
+                    @csrf
+                    <input type="hidden" name="noticia" VALUE="{{$noticia->id}}">
+                    <button type="submit" class="btn btn-primary align-left">Eliminar</button>
+                  </form>
+                @endif
+              </div>
               <p class="blog-post-meta" >{{  Carbon\Carbon::parse(strtotime($noticia->fecha_publicacion))->formatLocalized('%d %B %Y')  }} publicado: <a href="#">{{ $noticia->autor_pub->primer_nombre." ".$noticia->autor_pub->apellido_paterno  }}</a></p>
               <p>{{ $noticia->resumen}}</p>
               <hr>

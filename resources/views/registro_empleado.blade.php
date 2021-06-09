@@ -57,7 +57,7 @@
 
                       <label for="name" class="col-md-4 col-form-label text-md-center">No. Seguro Social<span class="text-red">*</span></label>
                       <div class="p-2 col-md-6p-2 col-md-6">
-                          <input class="form-control" type="name"  id="ipt_numero_seguro_social" name="numero_seguro_social" value="{{ old('numero_seguro_social') }}" >
+                          <input class="form-control" type="email"  id="ipt_numero_seguro_social" name="numero_seguro_social" value="{{ old('numero_seguro_social') }}" >
                       </div>
 
                       <label for="name" class="col-md-4 col-form-label text-md-center">Correo Empresa<span class="text-red">*</span> </label>
@@ -65,19 +65,21 @@
                           <input id="ipt_correo_empresa" type="text" class="form-control " name="correo_empresa" value="{{ old('correo_empresa') }}"  >
                       </div>
 
-                      <label for="name" class="col-md-4 col-form-label text-md-center">Telefono<span class="text-red">*</span></label>
-                      <div class="p-2 col-md-3 ">
-                          <input id="ipt_telefono" type="tel" class="form-control " name="telefono" value="{{ old('telefono') }}" >
-                      </div>
-                      <label for="lada" class="col-md-2 col-form-label text-md-center">Ext :</label>
-                      <div class="p-2 col-md-2 ">
-                          <input id="ipt_extension" type="tel" class="form-control " name="extension" value="{{ old('extension') }}" >
-                      </div>
-
                       <label for="name" class="col-md-4 col-form-label text-md-center">Contraseña<span class="text-red">*</span></label>
                       <div class="p-2 col-md-6">
                           <input id="ipt_contrasenia" type="password" class="form-control " name="contrasenia" value="{{ old('contrasenia') }}" >
                       </div>
+
+                      <label for="name" class="col-md-4 col-form-label text-md-center">Telefono</label>
+                      <div class="p-2 col-md-3 ">
+                          <input id="ipt_telefono" type="tel" class="form-control " name="telefono" value="{{ old('telefono') }}" >
+                      </div>
+                      <label for="name" class="col-md-2 col-form-label text-md-center">Ext :</label>
+                      <div class="p-2 col-md-2 ">
+                          <input id="ipt_extension" type="tel" class="form-control " name="extension" value="{{ old('extension') }}" >
+                      </div>
+
+
                     </div>
                     <div class="form-group row mb-0">
                       <div class="col-md-3 ">

@@ -322,21 +322,25 @@ class UsuariosController extends Controller
         ]);
         }
 
-      if(!is_numeric($telefono)&&strlen($telefono=10)){
-        return redirect()->back()->withInput()->with([
-          'titulo' => 'Telefono Invalido',
-          'mensaje' => 'El telefono ingresado no es correcto',
-          'tipo' => 'error'
-        ]);
+      if(!$telefono){
+        if(!is_numeric($telefono)&&strlen($telefono=10)){
+          return redirect()->back()->withInput()->with([
+            'titulo' => 'Telefono Invalido',
+            'mensaje' => 'El telefono ingresado no es correcto',
+            'tipo' => 'error'
+          ]);
+        }
       }
 
-      if(!$extension && is_numeric($extension)){
-        return redirect()->back()->withInput()->with([
-          'titulo' => 'Extensión',
-          'mensaje' => 'Extensión no valida',
-          'tipo' => 'error'
-        ]);
-        }
+      if($extension){
+        if(!$extension && is_numeric($extension)){
+          return redirect()->back()->withInput()->with([
+            'titulo' => 'Extensión',
+            'mensaje' => 'Extensión no valida',
+            'tipo' => 'error'
+          ]);
+          }
+      }
 
       if($zona_horaria==null){
       Log::error('UsuariosController@registroColaborador => Variable zona_horaria con valor nulo');
@@ -412,16 +416,16 @@ class UsuariosController extends Controller
     if(Auth::check()){
       $empleados = EEmp::with('correo_EEmp')
       ->with('usuario_EEmp')
-      ->with('persona_EEmp')
       ->with(['telefonos_EEmp' =>function($q1){
           $q1->with('catalogoTelefonos_UTel');
       }])
-      ->orderBy('edad','asc')
-      ->get();
-          //dd($empleados);
-      $empleados = $this->paginacion($empleados->all(), $request,8);
+      ->with('persona_EEmp')
+      ->get()->sortBy(function($q3){
+        return $q3->persona_EEmp->primer_nombre;
+      });
+        //  dd($empleados);
+      //$empleados = $this->paginacion($empleados->all(), $request,8);
       setlocale(LC_ALL, 'es');
-
       return view('listar_empleado',compact('empleados'));
     }else{
       Log::error('UsuariosController@listarEmpleado no se esta logueado');
@@ -433,7 +437,6 @@ class UsuariosController extends Controller
     }
   }
 
-
   public function directorio(Request $request){
     if(Auth::check()){
       $empleados = EEmp::with('correo_EEmp')
@@ -442,10 +445,10 @@ class UsuariosController extends Controller
       ->with(['telefonos_EEmp' =>function($q1){
           $q1->with('catalogoTelefonos_UTel');
       }])
-      ->orderBy('edad','asc')
-      ->get();
+      ->get()->sortBy(function($q3){
+        return $q3->persona_EEmp->primer_nombre;
+      });
           //dd($empleados);
-      $empleados = $this->paginacion($empleados->all(), $request,12);
       setlocale(LC_ALL, 'es');
 
       return view('directorio',compact('empleados'));
